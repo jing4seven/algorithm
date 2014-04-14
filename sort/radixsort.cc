@@ -1,5 +1,6 @@
 /*
  * 基数排序
+ * 基于基数，按照基数的位从小到达进行计数排序
  */
 #include <iostream>
 #include <vector>
@@ -21,50 +22,37 @@ void printsource(const vector<int> &source) {
     cout << "\n";
 }
 
-void rsort(vector<int> &source, int maxBit ) {
-    int tmp, i, j, k, t, m, n;
-    i = 0; // 十进制位索引
-    j = 0; // 元素索引
+void rsort(vector<int> &source, int maxBit, int base ) {
+    int tmp, idx, i, k;
+    idx = 0; // 基数位索引
+    i = 0; // 元素索引
+    vector<int> counts(base, 0);
 
-    vector<vector<int> > tmpVecArr;
-
-    // 初始化临时二维数组
-    for (n = 0; n<10; ++n) {
-        vector<int> tmpVec;
-        tmpVecArr.push_back(tmpVec);
-    }
-
-    // 从个位开始
-    i = 1;
-    while (i <= maxBit) {
-        // 清空临时二维数组
-        for (n = 0; n<10; ++n) {
-            tmpVecArr[n].clear();
-        }
-
-        // 根据当前十进制位的大小，将元素进行分组
-        for (j=0; j<source.size(); ++j)  {
-            if (i> 1)
-                tmp=(int)(source[j]/pow(10, i-1));
+    // 从最小的位开始
+    idx = 1;
+    while (idx <= maxBit) {
+        // 根据当前基数进制位的大小，将元素进行分组
+        for (i=0; i<source.size(); ++i)  {
+            if (idx> 1)
+                tmp=(int)(source[i]/pow(base, idx-1));
             else
-                tmp=source[j];
+                tmp=source[i];
 
-            k = tmp%10;
+            k = tmp%base;
 
-            tmpVecArr[k].push_back(source[j]);
+            counts[k] = counts[k]+1;
         }
-        t = 0;
-        m = 0;
 
-        // 将source中的内容替换成临时数组中的内容
-        while (t < tmpVecArr.size() ) {
-            for (n=0; n<tmpVecArr[t].size(); ++n) {
-                source[m+n]= tmpVecArr[t][n];
-            }
-            m = m + tmpVecArr[t].size() ;
-            ++t;
+        for (i=1; i<base; ++i) {
+            counts[i] = counts[i] + counts[i-1];
         }
-        ++i;
+
+        for (int i=0; i<source.size(); ++i) {
+            source[counts[source[i]]-1] = source[i];
+            --counts[source[i]];
+        }
+
+        ++idx;
     }
 }
 
@@ -75,7 +63,7 @@ int main() {
 
     srand((int)time(0));
     while (i < 100) {
-        tmp = random_btn(100, 1000);
+        tmp = random_btn(50, 1000);
         source.push_back(tmp);
         ++i;
     }
@@ -87,7 +75,9 @@ int main() {
 
     // 使用STL自带的排序方法：
     sort(testsource.begin(), testsource.end(), less<int>());
-    rsort(source, 3);
+    // 这里默认基数是10, 表示10进制，实际上也可以用其他的数
+    // 效果是一样的
+    rsort(source, 3, 10);
 
     cout << "ordered source:" <<endl;
     printsource(source);
