@@ -4,7 +4,6 @@
  * 前提条件：
  * 1. 需要知道序列中最大的数
  * 2. 所有需要排序的元素在一定区间
- * 3. 需要排序的数组的第一个元素[0]不在排序范围内
  *
  * 需要两个额外的存储空间
  * 一个是存放元素计数信息
@@ -38,7 +37,7 @@ void countsort(vector<int> &source, int maxvalue) {
     int i;
 
     // 填入计数信息
-    for (i=1; i<source.size(); ++i) {
+    for (i=0; i<source.size(); ++i) {
         countArr[source[i]] = countArr[source[i]] + 1;
     }
 
@@ -47,12 +46,12 @@ void countsort(vector<int> &source, int maxvalue) {
         countArr[i] = countArr[i] + countArr[i-1];
     }
 
-    for (i=1; i<source.size(); ++i) {
-        resultArr[countArr[source[i]]] = source[i];
+    for (i=0; i<source.size(); ++i) {
+        resultArr[countArr[source[i]]-1] = source[i];
         --countArr[source[i]];
     }
 
-    source.assign(resultArr.begin()+1, resultArr.end());
+    source.assign(resultArr.begin(), resultArr.end());
 }
 
 int main() {
@@ -63,18 +62,16 @@ int main() {
 
     srand((int)time(0));
 
-    source.push_back(0);
-
     i=1;
     // 这里初始化100个元素，索引从1到100
-    while (i < 101) {
+    while (i < 100) {
         tmp = random(maxvalue);
         source.push_back(tmp);
         ++i;
     }
 
     // 被测试的数组也是从1到100, 第0位不在范围内
-    testsource.assign(source.begin()+1, source.end());
+    testsource.assign(source.begin(), source.end());
 
     cout << "source:" <<endl;
     printsource(source);
