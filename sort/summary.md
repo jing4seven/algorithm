@@ -9,6 +9,7 @@
 根据公式变换，最坏情况下，_基于比较的排序_需要NLogN次比较，也就是说时间复杂度是O(NlogN)。
 
 决策树：
+
 ![决策树](http://jing4seven.github.io/assets/images/decision.tree.jpg)
 
 ### 线性时间排序
