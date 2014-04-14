@@ -7,11 +7,21 @@
 
 1. 排序
     * 插入排序
+        * [基于STL的实现](https://github.com/jing4seven/algorithm/blob/master/sort/insertsort.cc)
     * 归并排序
+        * [基于STL的实现](https://github.com/jing4seven/algorithm/blob/master/sort/mergesort.cc)
     * 快速排序
+        * [基于STL的实现, 不带随机变量](https://github.com/jing4seven/algorithm/blob/master/sort/quicksort1.cc)
+        * [基于STL的实现, 带随机变量](https://github.com/jing4seven/algorithm/blob/master/sort/quicksort2.cc)
     * 堆排序
+        * [基于STL的实现](https://github.com/jing4seven/algorithm/blob/master/sort/heapsort.cc)
     * 计数排序
+        * [基于STL的实现](https://github.com/jing4seven/algorithm/blob/master/sort/countsort.cc)
     * 基数排序
+        * [基于STL的实现](https://github.com/jing4seven/algorithm/blob/master/sort/radixsort.cc)
+    * 桶排序
+        * [基于STL的实现](https://github.com/jing4seven/algorithm/blob/master/sort/bucksort.cc)
+
 2. 搜索
     * 二分搜索
     * 广度优先搜索
