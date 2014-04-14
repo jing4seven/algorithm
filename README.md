@@ -11,8 +11,8 @@
     * 归并排序
         * [基于STL的实现](https://github.com/jing4seven/algorithm/blob/master/sort/mergesort.cc)
     * 快速排序
-        * [基于STL的实现, 不带随机变量](https://github.com/jing4seven/algorithm/blob/master/sort/quicksort1.cc)
-        * [基于STL的实现, 带随机变量](https://github.com/jing4seven/algorithm/blob/master/sort/quicksort2.cc)
+        * [基于STL的实现, 随机选取中间值](https://github.com/jing4seven/algorithm/blob/master/sort/quicksort.cc)
+        * [基于STL的实现, 选取固定中间值](https://github.com/jing4seven/algorithm/blob/master/sort/quicksort2.cc)
     * 堆排序
         * [基于STL的实现](https://github.com/jing4seven/algorithm/blob/master/sort/heapsort.cc)
     * 计数排序
@@ -21,25 +21,30 @@
         * [基于STL的实现](https://github.com/jing4seven/algorithm/blob/master/sort/radixsort.cc)
     * 桶排序
         * [基于STL的实现](https://github.com/jing4seven/algorithm/blob/master/sort/bucksort.cc)
-
+    * [小结](https://github.com/jing4seven/algorithm/blob/master/sort/summary.md)
 2. 搜索
     * 二分搜索
     * 广度优先搜索
     * 深度优先搜索
+    * 小结
 3. 树数据结构
     * 红黑树
     * B树
+    * 小结
 4. 分析方法
     * 动态规划
     * 贪心法
     * 摊还分析
+    * 小结
 5. 图算法
     * 最小生成树（Prim和Kruskal算法）
     * 单源最短路径（Bellman-Ford和Dijkstra算法）
     * 所有节点的最短路径问题
     * 最大流（Ford-Fulkerson算法）
+    * 小结
 6. 特殊算法
     * NP完全问题
     * 近似算法
+    * 小结
 
 
