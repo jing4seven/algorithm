@@ -15,6 +15,8 @@
 #include <iostream>
 #include <exception>
 
+using namespace std;
+
 class UnderflowException {};
 
 // 二叉树的节点
@@ -40,7 +42,7 @@ public:
     T & findMax() const;
     bool contains(const T & data) const;
     bool isEmpty() const;
-    void printfTree() const;
+    void printfTree(ostream & out) const;
 
     void makeEmpty();
     void insert(const T & data);
@@ -57,7 +59,7 @@ private:
     void remove(const T &data, BinaryNode<T> * node);
 
     void makeEmpty(BinaryNode<T> * &node);
-    void printfTree() const;
+    void printfTree(const BinaryNode<T> * node, ostream & out) const;
     BinaryNode<T> * clone(const BinaryNode<T> * t) const;
 };
 
@@ -136,6 +138,15 @@ BinarySearchTree<T>::operator=(const BinarySearchTree & tree) {
         root = clone(tree.root);
     }
     return *this;
+}
+
+template <typename T>
+void
+BinarySearchTree<T>::printfTree(ostream & out) const {
+    if (isEmpty())
+        out << "Empty tree" << endl;
+    else
+        printTree(root, out);
 }
 
 template <typename T>
@@ -231,4 +242,14 @@ BinarySearchTree<T>::clone(const BinaryNode<T> * node) const {
         return NULL;
     else
         return clone(node->elm, clone(node->left), clone(node->right));
+}
+
+template <typename T>
+void
+BinarySearchTree<T>::printfTree(const BinaryNode<T> * node, ostream & out) const {
+    if (node != NULL) {
+        printfTree(node->left, out);
+        printfTree(node->elm, out);
+        printfTree(node->right, out);
+    }
 }
