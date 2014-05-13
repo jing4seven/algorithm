@@ -2,84 +2,71 @@
  * 二叉查找树
  *
  * 特征：
- * 对于二叉树中的每个节点X，其左子树中所有项的值
- * 都小于X中的项，而它的右子树中的所有项都大于X
- * 中的项.
+ * 1. 对于二叉树中的每个节点X，其左子树中所有项的值
+ *    都小于X中的项，而它的右子树中的所有项都大于X
+ *    中的项.
  *
- * 这里为了方便起见，没有将接口和实现分离，
- * 如果在正式的项目中，最好还是分离；
+ * 注：
+ * 1. 这里为了方便起见，没有将接口和实现分离，
+ *    如果在正式的项目中，最好还是分离；
+ * 2. 数据元素直接用int实现，也是为了方便验证；
  */
 
 // 接口部分
 
 #include <iostream>
 #include <exception>
+#include <cctype>
+#include "printTree.h"
 
 using namespace std;
 
 class UnderflowException {};
 
-// 二叉树的节点
-template <typename T>
-class BinaryNode {
-public:
-    T elm;
-    BinaryNode * left;
-    BinaryNode * right;
-    BinaryNode(const T & theElm, const BinaryNode & l,
-            const BinaryNode & r): elm(theElm), left(l), right(r){};
-};
-
 // 二叉树定义
-template <typename T>
 class BinarySearchTree {
 public:
     BinarySearchTree();
     BinarySearchTree(BinarySearchTree & tree);
     ~BinarySearchTree();
 
-    T & findMin() const;
-    T & findMax() const;
-    bool contains(const T & data) const;
+    const int & findMin() const;
+    const int & findMax() const;
+    bool contains(const int data) const;
     bool isEmpty() const;
     void printfTree(ostream & out) const;
 
     void makeEmpty();
-    void insert(const T & data);
-    void remove(const T & data);
+    void insert(const int data);
+    void remove(const int data);
     const BinarySearchTree &  operator=(const BinarySearchTree & tree);
+    BinaryNode * root;
 
 private:
-    BinaryNode<T> * root;
+    BinaryNode * findMin(BinaryNode * node) const;
+    BinaryNode * findMax(BinaryNode * node) const;
+    bool contains(const int data, BinaryNode * node) const;
+    void insert(const int data, BinaryNode * &node);
+    void remove(const int data, BinaryNode * &node);
 
-    BinaryNode<T> * findMin(BinaryNode<T> * node) const;
-    BinaryNode<T> * findMax(BinaryNode<T> * node) const;
-    bool contains(const T & data, const BinaryNode<T> * node) const;
-    void insert(const T &data, BinaryNode<T> * node);
-    void remove(const T &data, BinaryNode<T> * node);
-
-    void makeEmpty(BinaryNode<T> * &node);
-    void printfTree(const BinaryNode<T> * node, ostream & out) const;
-    BinaryNode<T> * clone(const BinaryNode<T> * t) const;
+    void makeEmpty(BinaryNode * &node);
+    void printfTree(const BinaryNode * node, ostream & out) const;
+    BinaryNode * clone(const BinaryNode * t) const;
 };
 
 // 实现部分
-template <typename T>
-BinarySearchTree<T>::BinarySearchTree():root(NULL) {}
+BinarySearchTree::BinarySearchTree():root(NULL) {}
 
-template <typename T>
-BinarySearchTree<T>::BinarySearchTree(BinarySearchTree & tree) {
+BinarySearchTree::BinarySearchTree(BinarySearchTree & tree) {
     *this = tree;
 }
 
-template <typename T>
-BinarySearchTree<T>::~BinarySearchTree() {
-    this.makeEmpty();
+BinarySearchTree::~BinarySearchTree() {
+    makeEmpty();
 }
 
-template <typename T>
-T &
-BinarySearchTree<T>::findMin() const {
+const int &
+BinarySearchTree::findMin() const {
     if (isEmpty() ) {
         throw new UnderflowException();
     }
@@ -87,52 +74,46 @@ BinarySearchTree<T>::findMin() const {
     return findMin(root)->elm;
 }
 
-template <typename T>
-T &
-BinarySearchTree<T>::findMax() const {
+const int &
+BinarySearchTree::findMax() const {
     if (isEmpty()) {
         throw new UnderflowException();
     }
 
-    return this.findMax(root)->elm;
+    return findMax(root)->elm;
 }
 
-template <typename T>
 bool
-BinarySearchTree<T>::contains(const T & data) const {
-    if (data == NULL) {
+BinarySearchTree::contains(const int data) const {
+    if (isdigit(data)) {
         return false;
     }
     return contains(data, root);
 }
 
-template <typename T>
 bool
-BinarySearchTree<T>::isEmpty() const {
+BinarySearchTree::isEmpty() const {
     return root == NULL;
 }
 
-template <typename T>
 void
-BinarySearchTree<T>::makeEmpty() {
+BinarySearchTree::makeEmpty() {
     makeEmpty(root);
 }
 
-template <typename T>
 void
-BinarySearchTree<T>::insert(const T & data) {
+BinarySearchTree::insert(const int data) {
+    // 传递root节点的引用
     insert(data, root);
 }
 
-template <typename T>
 void
-BinarySearchTree<T>::remove(const T & data) {
+BinarySearchTree::remove(const int data) {
     remove(data, root);
 }
 
-template <typename T>
-const BinarySearchTree<T> &
-BinarySearchTree<T>::operator=(const BinarySearchTree & tree) {
+const BinarySearchTree &
+BinarySearchTree::operator=(const BinarySearchTree & tree) {
     if (this != &tree) {
         makeEmpty();
         root = clone(tree.root);
@@ -140,18 +121,16 @@ BinarySearchTree<T>::operator=(const BinarySearchTree & tree) {
     return *this;
 }
 
-template <typename T>
 void
-BinarySearchTree<T>::printfTree(ostream & out) const {
+BinarySearchTree::printfTree(ostream & out) const {
     if (isEmpty())
         out << "Empty tree" << endl;
     else
-        printTree(root, out);
+        printfTree(root, out);
 }
 
-template <typename T>
-BinaryNode<T> *
-BinarySearchTree<T>::findMin(BinaryNode<T> * node) const {
+BinaryNode *
+BinarySearchTree::findMin(BinaryNode * node) const {
 
     if (node == NULL)
         return NULL;
@@ -163,9 +142,8 @@ BinarySearchTree<T>::findMin(BinaryNode<T> * node) const {
     }
 }
 
-template <typename T>
-BinaryNode<T> *
-BinarySearchTree<T>::findMax(BinaryNode<T> * node) const {
+BinaryNode *
+BinarySearchTree::findMax(BinaryNode * node) const {
 
     if (node == NULL)
         return NULL;
@@ -177,24 +155,24 @@ BinarySearchTree<T>::findMax(BinaryNode<T> * node) const {
     }
 }
 
-template <typename T>
 bool
-BinarySearchTree<T>::contains(const T & data, const BinaryNode<T> * node) const {
+BinarySearchTree::contains(const int data, BinaryNode * node) const {
     if (node == NULL) {
         return false;
-    } else if (data < node.elm) {
+    } else if (data < node->elm) {
         contains(data, node->left);
-    } else if (data > node.elm) {
+    } else if (data > node->elm) {
         return contains(data, node->right);
-    } else if (data == node.elm) {
+    } else if (data == node->elm) {
         return true;
     }
 }
-
-template <typename T>
-void insert(const T &data, BinaryNode<T> * node) {
+void
+BinarySearchTree::insert(const int data, BinaryNode * & node) {
     if (node == NULL) {
-        node = new BinaryNode<T>(data, NULL, NULL);
+        // 如果node为空，表示其为根节点
+        // 那么直接对其引用赋值，实例化一个node给它.
+        node = new BinaryNode(data, NULL, NULL);
     } else if (data < node->elm){
         insert(data, node->left);
     } else if (data > node->elm) {
@@ -202,8 +180,9 @@ void insert(const T &data, BinaryNode<T> * node) {
     }
 }
 
-template <typename T>
-void remove(const T &data, BinaryNode<T> * node) {
+// 这里
+void
+BinarySearchTree::remove(const int data, BinaryNode * &node) {
     if (node == NULL) {
         return;
     } else if (data < node->elm) {
@@ -212,21 +191,20 @@ void remove(const T &data, BinaryNode<T> * node) {
         remove(data, node->right);
     } else {
         if (node->left != NULL && node->right != NULL) {
+            // 如果有两个子节点, 删除右子节点中最小节点；
             node->elm = findMin(node->right)->elm;
             remove(node->elm, node->right);
-        } else if (node->left != NULL || node->right != NULL) {
-            BinaryNode<T> * oldElm = node;
+        } else  {
+            // 如果只有一个子节点或者根本没有子节点，直接删除
+            BinaryNode * oldElm = node;
             node = node->left != NULL ? node->left : node->right;
             delete oldElm;
-        } else {
-            delete node;
         }
     }
 }
 
-template <typename T>
 void
-BinarySearchTree<T>::makeEmpty(BinaryNode<T> * &node) {
+BinarySearchTree::makeEmpty(BinaryNode * &node) {
     if (node !=NULL) {
         makeEmpty(node->left);
         makeEmpty(node->right);
@@ -235,21 +213,47 @@ BinarySearchTree<T>::makeEmpty(BinaryNode<T> * &node) {
     node = NULL;
 }
 
-template <typename T>
-BinaryNode<T> *
-BinarySearchTree<T>::clone(const BinaryNode<T> * node) const {
+BinaryNode *
+BinarySearchTree::clone(const BinaryNode * node) const {
     if (node == NULL)
         return NULL;
     else
-        return clone(node->elm, clone(node->left), clone(node->right));
+        return new BinaryNode(node->elm, clone(node->left), clone(node->right));
 }
 
-template <typename T>
 void
-BinarySearchTree<T>::printfTree(const BinaryNode<T> * node, ostream & out) const {
+BinarySearchTree::printfTree(const BinaryNode * node, ostream & out) const {
     if (node != NULL) {
         printfTree(node->left, out);
-        printfTree(node->elm, out);
+        out << node->elm << endl;
         printfTree(node->right, out);
     }
+}
+
+int main() {
+    BinarySearchTree * tree = new BinarySearchTree();
+    tree->insert(30);
+    tree->insert(20);
+    tree->insert(40);
+    tree->insert(10);
+    tree->insert(25);
+    tree->insert(35);
+    tree->insert(50);
+    tree->insert(5);
+    tree->insert(15);
+    tree->insert(28);
+    tree->insert(41);
+
+    cout << "Print tree:"<<endl;
+    //tree->printfTree(cout);
+    printPretty(tree->root, 1, 0, cout);
+
+    tree->remove(30);
+    cout << "After remove root item:" <<endl;
+    //tree->printfTree(cout);
+    printPretty(tree->root, 1, 0, cout);
+
+    tree->makeEmpty();
+    return 0;
+
 }
