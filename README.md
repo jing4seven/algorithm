@@ -26,19 +26,19 @@
     * [小结](https://github.com/jing4seven/algorithm/blob/master/sort/summary.md)
 2. 散列
     * key为整数的散列
-        * 除法散列
-        * 乘法散列
-        * 全域散列
+        * [除法散列(Division hashing)](https://github.com/jing4seven/algorithm/blob/master/hash/divi.hash.cc)
+        * [乘法散列(Multiplication hashing)](https://github.com/jing4seven/algorithm/blob/master/hash/mult.hash.cc)
+        * [全域散列(Universal hashing)](https://github.com/jing4seven/algorithm/blob/master/hash/uni.hash.cc)
     * key为字符串的散列
-        * 例子1
-        * 例子2
+        * [例子1](https://github.com/jing4seven/algorithm/blob/master/hash/str.hash.ins1.cc)
+        * [例子2](https://github.com/jing4seven/algorithm/blob/master/hash/str.hash.ins2.cc)
     * 解决冲突的方法
-        * 分离链接法
+        * [分离链接法](https://github.com/jing4seven/algorithm/blob/master/hash/linked.list.hashtable.cc)
         * 不使用链表的方法
-            * 开放寻址发
-            * 二次探测
-            * 双重探测
-    * 小结
+            * [开放寻址发(Open addressing)](https://github.com/jing4seven/algorithm/blob/master/hash/open.addressing.cc)
+            * [二次探测(Quadratic probing)](https://github.com/jing4seven/algorithm/blob/master/hash/quadratic.probing.cc)
+            * [双重探测(Secondary clustering)](https://github.com/jing4seven/algorithm/blob/master/hash/secondary.clustering.cc)
+    * [小结](https://github.com/jing4seven/algorithm/blob/master/hash/summary.md)
 3. 搜索
     * 二分搜索
     * 广度优先搜索
