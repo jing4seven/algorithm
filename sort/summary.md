@@ -40,7 +40,7 @@
 | 归并排序   | Theta(nlogn)      | Theta(nlogn)           |
 | 堆排序     | O(nlogn)          | --                     |
 | 快速排序   | Theta(n^2)        | Theta(nlogn)（期望）   |
-| 希尔排序   | O(n^2)            | O(n^2)                 |
+| 希尔排序   | O(n^2)            | --                     |
 | 计数排序   | Theta(k+n)        | Theta(k+n)             |
 | 基数排序   | Theta(d(n+k))     | Theta(d(n+k))          |
 | 桶排序     | Theta(n^2)        | Theta(n)（平均情况）   |
