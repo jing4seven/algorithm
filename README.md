@@ -39,14 +39,20 @@
             * [二次探测(Quadratic probing)](https://github.com/jing4seven/algorithm/blob/master/hash/quadratic.probing.cc)
             * [双重探测(Secondary clustering)](https://github.com/jing4seven/algorithm/blob/master/hash/secondary.clustering.cc)
     * [小结](https://github.com/jing4seven/algorithm/blob/master/hash/summary.md)
-3. 搜索
+3. 树数据结构
+    * 二叉查找树
+        * [c++的实现](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree.cc)
+        * [c的实现](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree.c)
+        * [c++测试](https://github.com/jing4seven/algorithm/blob/master/tree/test.for.search.tree.cc)
+        * [c测试](https://github.com/jing4seven/algorithm/blob/master/tree/test.for.search.tree.c)
+    * 二叉平衡树(AVL)
+    * 红黑树
+    * B树
+    * 小结
+4. 搜索
     * 二分搜索
     * 广度优先搜索
     * 深度优先搜索
-    * 小结
-4. 树数据结构
-    * 红黑树
-    * B树
     * 小结
 5. 分析方法
     * 动态规划
