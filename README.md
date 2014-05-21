@@ -30,8 +30,13 @@
         * [乘法散列(Multiplication hashing)](https://github.com/jing4seven/algorithm/blob/master/hash/mult.hash.cc)
         * [全域散列(Universal hashing)](https://github.com/jing4seven/algorithm/blob/master/hash/uni.hash.cc)
     * key为字符串的散列
-        * [例子1](https://github.com/jing4seven/algorithm/blob/master/hash/str.hash.ins1.cc)
-        * [例子2](https://github.com/jing4seven/algorithm/blob/master/hash/str.hash.ins2.cc)
+        * [BKDRHash](#)
+        * [DJBHash](#)
+        * [JSHash](#)
+        * [RSHash](#)
+        * [SDBMHash](#)
+        * [PJWHash](https://github.com/jing4seven/algorithm/blob/master/hash/str.hash.ins1.cc)
+        * [ELFHash](#)
     * 解决冲突的方法
         * [分离链接法](https://github.com/jing4seven/algorithm/blob/master/hash/linked.list.hashtable.cc)
         * 不使用链表的方法
