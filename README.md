@@ -46,10 +46,8 @@
     * [小结](https://github.com/jing4seven/algorithm/blob/master/hash/summary.md)
 3. 树数据结构
     * 二叉查找树
-        * [c++的实现](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree.cc)
-        * [c的实现](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree.c)
-        * [c++测试](https://github.com/jing4seven/algorithm/blob/master/tree/test.for.search.tree.cc)
-        * [c测试](https://github.com/jing4seven/algorithm/blob/master/tree/test.for.search.tree.c)
+        * [基于C++通过传值维护变更](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree.cc)
+        * [基于C++通过替换节点维护变更](https://github.com/jing4seven/algorithm/blob/master/tree/test.for.search.tree.cc)
     * 二叉平衡树(AVL)
     * 红黑树
     * B树
