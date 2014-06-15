@@ -1,15 +1,24 @@
 /*
  * 二叉查找树
+ * 插入删除操作用替换数据实现
  *
  * 特征：
  * 1. 对于二叉树中的每个节点X，其左子树中所有项的值
  *    都小于X中的项，而它的右子树中的所有项都大于X
  *    中的项.
  *
+*
  * 注：
  * 1. 这里为了方便起见，没有将接口和实现分离，
  *    如果在正式的项目中，最好还是分离；
  * 2. 数据元素直接用int实现，也是为了方便验证；
+ * 3. 这个版本的二叉搜索树在插入和删除节点的实现上
+ *    用的时数据替换，不是真实的节点替换；
+ *    在某些情况下，这样做会导致一些问题，被删除的节点
+ *    也许并不是传递到删除过程中的那个节点。
+ *    如果一个程序的其他部分要维持一些指向节点的指针，
+ *    那么他们可能会被这些已删除节点的“过时”指针带来错
+ *    误的影响。
  */
 
 // 接口部分
@@ -18,8 +27,6 @@
 #include <exception>
 #include <cctype>
 #include "printTree.h"
-
-using namespace std;
 
 class UnderflowException {};
 
@@ -30,8 +37,8 @@ public:
     BinarySearchTree(BinarySearchTree & tree);
     ~BinarySearchTree();
 
-    const int & findMin() const;
-    const int & findMax() const;
+    int findMin() const;
+    int findMax() const;
     bool contains(const int data) const;
     bool isEmpty() const;
     void printfTree(ostream & out) const;
@@ -39,7 +46,7 @@ public:
     void makeEmpty();
     void insert(const int data);
     void remove(const int data);
-    const BinarySearchTree &  operator=(const BinarySearchTree & tree);
+    BinarySearchTree &  operator=(BinarySearchTree & tree);
     BinaryNode * root;
 
 private:
@@ -65,7 +72,7 @@ BinarySearchTree::~BinarySearchTree() {
     makeEmpty();
 }
 
-const int &
+int
 BinarySearchTree::findMin() const {
     if (isEmpty() ) {
         throw new UnderflowException();
@@ -74,7 +81,7 @@ BinarySearchTree::findMin() const {
     return findMin(root)->elm;
 }
 
-const int &
+int
 BinarySearchTree::findMax() const {
     if (isEmpty()) {
         throw new UnderflowException();
@@ -112,8 +119,8 @@ BinarySearchTree::remove(const int data) {
     remove(data, root);
 }
 
-const BinarySearchTree &
-BinarySearchTree::operator=(const BinarySearchTree & tree) {
+BinarySearchTree &
+BinarySearchTree::operator=(BinarySearchTree & tree) {
     if (this != &tree) {
         makeEmpty();
         root = clone(tree.root);
