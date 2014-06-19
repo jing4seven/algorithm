@@ -1,7 +1,7 @@
 /*******************************************************************************
  二叉查找树
 
- 插入删除操作用替换数据实现
+ 惰性删除实现remove操作，
 
  特征：
  对于二叉树中的每个节点X，其左子树中所有项的值都小于X中的项，而它的右子树中的
@@ -20,15 +20,16 @@
 #ifndef ALG_TREE_BINARYSEARCHTREE_H
 #define ALG_TREE_BINARYSEARCHTREE_H
 
-#include "binary.node.h"
 #include <string.h>
+#include "binary.node.h"
+
 
 using namespace std;
 
 class BinarySearchTree {
 public:
     BinarySearchTree();
-    BinarySearchTree(BinarySearchTree & tree);
+    BinarySearchTree(const BinarySearchTree & tree);
     ~BinarySearchTree();
 
     int findMin() const;
@@ -37,7 +38,7 @@ public:
     bool contains(const int data) const;
     bool isEmpty() const;
     void makeEmpty();
-    void traversal(string & out) const;
+    void traversal(ostringstream & out) const;
 
     void insert(const int data);
     void remove(const int data);
@@ -56,7 +57,7 @@ private:
     void remove(BinaryNode * &node, const int data);
 
     void makeEmpty(BinaryNode * &node);
-    void traversal(const BinaryNode * &node, string & out) const;
+    void traversal(const BinaryNode * &node, ostringstream & out) const;
     BinaryNode * clone(const BinaryNode * t) const;
 };
 #endif

@@ -13,7 +13,7 @@ using namespace std;
 // 构造函数
 BinarySearchTree::BinarySearchTree():root(NULL) {}
 
-BinarySearchTree::BinarySearchTree(BinarySearchTree & tree) {
+BinarySearchTree::BinarySearchTree(const BinarySearchTree & tree) {
     *this = tree;
 }
 
@@ -59,7 +59,7 @@ BinarySearchTree::makeEmpty() {
 }
 
 void
-BinarySearchTree::traversal(string & out) const {
+BinarySearchTree::traversal(ostringstream & out) const {
     return traversal((const BinaryNode *&)root, out);
 }
 
@@ -169,18 +169,18 @@ BinarySearchTree::makeEmpty(BinaryNode * &node) {
 }
 
 void
-BinarySearchTree::traversal(const BinaryNode *&node, string & out) const {
+BinarySearchTree::traversal(const BinaryNode *&node, ostringstream & out)
+    const {
     if (!node)
         return;
-
     if (node->left) {
         traversal((const BinaryNode *&)node->left, out);
     }
-
-    // ToDo: append node->elm to out string;
-
+    if (node) {
+        out << node->elm << ",";
+    }
     if (node->right) {
-        traversal((const BinaryNode *&)node->left, out);
+        traversal((const BinaryNode *&)node->right, out);
     }
 }
 
@@ -191,31 +191,3 @@ BinarySearchTree::clone(const BinaryNode * node) const {
     else
         return new BinaryNode(node->elm, clone(node->left), clone(node->right));
 }
-/*
-int main() {
-    BinarySearchTree * tree = new BinarySearchTree();
-    tree->insert(30);
-    tree->insert(20);
-    tree->insert(40);
-    tree->insert(10);
-    tree->insert(25);
-    tree->insert(35);
-    tree->insert(50);
-    tree->insert(5);
-    tree->insert(15);
-    tree->insert(28);
-    tree->insert(41);
-
-    cout << "Print tree:"<<endl;
-    //tree->printfTree(cout);
-    printPretty(tree->root, 1, 0, cout);
-
-    tree->remove(30);
-    cout << "After remove root item:" <<endl;
-    //tree->printfTree(cout);
-    printPretty(tree->root, 1, 0, cout);
-
-    tree->makeEmpty();
-    return 0;
-
-}*/

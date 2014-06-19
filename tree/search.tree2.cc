@@ -1,101 +1,64 @@
-/*
- * 二叉查找树
- * 插入删除操作用真实元素操作实现
- *
- */
 #include <iostream>
+#include <sstream>
 #include <exception>
 #include <cctype>
 #include "printTree.h"
+#include "search.tree2.h"
 
-// 多一个属性parent
-class SecuBinaryNode: public BinaryNode {
-public:
-    // 每个操作都需要维护父节点属性
-    SecuBinaryNode * parent;
+////////////////////////////////////////////////////////////////////////////////
 
-    SecuBinaryNode(const int &d, SecuBinaryNode * l, SecuBinaryNode * r,
-            SecuBinaryNode * p):BinaryNode(d,l,r), parent(p){}
-};
+BinarySearchTree2::BinarySearchTree2():root(NULL){}
 
-// 接口部分
-class BinarySearchTree {
-public:
-    BinarySearchTree();
-    BinarySearchTree(BinarySearchTree * &tree);
-    ~BinarySearchTree();
-
-    void insert(const int data);
-    void remove(const int data);
-    int findMax() const;
-    int findMin() const;
-    bool contains(const int data) const ;
-    bool isEmpty() const;
-    void makeEmpty();
-    BinarySearchTree &operator=(const BinarySearchTree &node);
-
-    SecuBinaryNode * root;
-
-private:
-    SecuBinaryNode * findNext(const SecuBinaryNode * node);
-    void insert(SecuBinaryNode * &node, SecuBinaryNode * pnode, int d);
-    void remove(SecuBinaryNode * &node, int d);
-    SecuBinaryNode * findMax(SecuBinaryNode * node) const;
-    SecuBinaryNode * findMin(SecuBinaryNode * node) const;
-    bool contains(const SecuBinaryNode * node, const int data) const;
-    void makeEmpty(SecuBinaryNode * &node);
-    SecuBinaryNode * clone(const SecuBinaryNode * node) const;
-    void transplant(SecuBinaryNode * &a, SecuBinaryNode * &b);
-};
-
-
-BinarySearchTree::BinarySearchTree():root(NULL){}
-
-BinarySearchTree::BinarySearchTree(BinarySearchTree * &tree) {
+BinarySearchTree2::BinarySearchTree2(const BinarySearchTree2  &tree) {
     *this = tree;
 }
 
-BinarySearchTree::~BinarySearchTree() {
+BinarySearchTree2::~BinarySearchTree2() {
     makeEmpty();
 }
 
-void
-BinarySearchTree::insert(const int data) {
-    insert(root, NULL, data);
-}
-
-void
-BinarySearchTree::remove(const int data) {
-    remove(root, data);
-}
-
 int
-BinarySearchTree::findMax() const {
+BinarySearchTree2::findMax() const {
     return findMax(root)->elm;
 }
 
 int
-BinarySearchTree::findMin() const {
+BinarySearchTree2::findMin() const {
     return findMin(root)->elm;
 }
 
 bool
-BinarySearchTree::contains(const int data) const {
-    return contains(root, data);
+BinarySearchTree2::contains(const int data) const {
+    return contains((const SecuBinaryNode *&)root, data);
+}
+
+void
+BinarySearchTree2::insert(const int data) {
+    insert(root, NULL, data);
+}
+
+void
+BinarySearchTree2::remove(const int data) {
+    remove(root, data);
 }
 
 bool
-BinarySearchTree::isEmpty() const {
+BinarySearchTree2::isEmpty() const {
     return root == NULL;
 }
 
 void
-BinarySearchTree::makeEmpty() {
+BinarySearchTree2::makeEmpty() {
     makeEmpty(this->root);
 }
 
-BinarySearchTree &
-BinarySearchTree::operator=(const BinarySearchTree & tree) {
+void
+BinarySearchTree2::traversal(ostringstream & out) const {
+    traversal((const SecuBinaryNode *&)root, out);
+}
+
+BinarySearchTree2 &
+BinarySearchTree2::operator=(const BinarySearchTree2 & tree) {
     if (this != &tree) {
         makeEmpty();
         root = clone(tree.root);
@@ -103,32 +66,38 @@ BinarySearchTree::operator=(const BinarySearchTree & tree) {
     return *this;
 }
 
-// 私有方法实现
+////////////////////////////////////////////////////////////////////////////////
+
 SecuBinaryNode *
-BinarySearchTree::findNext(const SecuBinaryNode * node) {
-    if (node->right != NULL) {
-        return findMin((SecuBinaryNode *)node->right);
-    } else {
-        SecuBinaryNode * temp;
-        temp = node->parent;
+BinarySearchTree2::findMax(SecuBinaryNode * node) const{
+    if (node->right != NULL)
+        return findMax((SecuBinaryNode *)node->right);
 
-        // 如果node的父节点不为空且，node是右节点
-        // 说明node的父节点的值比node的值小
-        // 还需要往更高层搜索
-        while (temp != NULL && temp->right == node) {
-            // temp网上爬一层后，它与node的相对
-            // 关系发生了变化，所以node也得保持相对
-            // 位置，以保持循环判定方法的正确
-            node = temp;
+    return node;
+}
 
-            temp = node->parent;
-        }
-        return temp;
+SecuBinaryNode *
+BinarySearchTree2::findMin(SecuBinaryNode * node) const{
+    if (node->left != NULL)
+        return findMin((SecuBinaryNode *)node->left);
+
+    return node;
+}
+
+bool
+BinarySearchTree2::contains(const SecuBinaryNode * &node, const int d) const{
+    while (node!=NULL && node->elm != d) {
+        if (d > node->elm)
+            node = (const SecuBinaryNode *)node->right;
+        if (d < node->elm)
+            node = (const SecuBinaryNode *)node->left;
     }
+
+    return node == NULL ? false : true;
 }
 
 void
-BinarySearchTree::insert(SecuBinaryNode * &node, SecuBinaryNode * pnode,  int d) {
+BinarySearchTree2::insert(SecuBinaryNode * &node, SecuBinaryNode * pnode,  int d) {
     if (node == NULL) {
         node = new SecuBinaryNode(d, NULL, NULL, pnode);
     } else if (d > node->elm) {
@@ -139,7 +108,7 @@ BinarySearchTree::insert(SecuBinaryNode * &node, SecuBinaryNode * pnode,  int d)
 }
 
 void
-BinarySearchTree::remove(SecuBinaryNode * &node, int d) {
+BinarySearchTree2::remove(SecuBinaryNode * &node, int d) {
     if (node == NULL) {
         return;
     }
@@ -196,35 +165,30 @@ BinarySearchTree::remove(SecuBinaryNode * &node, int d) {
 }
 
 SecuBinaryNode *
-BinarySearchTree::findMax(SecuBinaryNode * node) const{
-    if (node->right != NULL)
-        return findMax((SecuBinaryNode *)node->right);
+BinarySearchTree2::findNext(const SecuBinaryNode * node) {
+    if (node->right != NULL) {
+        return findMin((SecuBinaryNode *)node->right);
+    } else {
+        SecuBinaryNode * temp;
+        temp = node->parent;
 
-    return node;
-}
+        // 如果node的父节点不为空且，node是右节点
+        // 说明node的父节点的值比node的值小
+        // 还需要往更高层搜索
+        while (temp != NULL && temp->right == node) {
+            // temp往上爬一层后，它与node的相对
+            // 关系发生了变化，所以node也得保持相对
+            // 位置，以保持循环判定方法的正确
+            node = temp;
 
-SecuBinaryNode *
-BinarySearchTree::findMin(SecuBinaryNode * node) const{
-    if (node->left != NULL)
-        return findMin((SecuBinaryNode *)node->left);
-
-    return node;
-}
-
-bool
-BinarySearchTree::contains(const SecuBinaryNode * node, const int d) const{
-    while (node!=NULL && node->elm != d) {
-        if (d > node->elm)
-            node = (SecuBinaryNode *)node->right;
-        if (d < node->elm)
-            node = (SecuBinaryNode *)node->left;
+            temp = node->parent;
+        }
+        return temp;
     }
-
-    return node == NULL ? false : true;
 }
 
 void
-BinarySearchTree::makeEmpty(SecuBinaryNode * &node) {
+BinarySearchTree2::makeEmpty(SecuBinaryNode * &node) {
     if (node != NULL) {
         makeEmpty((SecuBinaryNode *&)node->left);
         makeEmpty((SecuBinaryNode *&)node->right);
@@ -234,8 +198,27 @@ BinarySearchTree::makeEmpty(SecuBinaryNode * &node) {
     node = NULL;
 }
 
+void
+BinarySearchTree2::traversal (const SecuBinaryNode * &node, ostringstream & out)
+    const {
+    if (!node)
+        return;
+
+    if (node->left) {
+        traversal((const SecuBinaryNode *&)node->left, out);
+    }
+
+    if (node) {
+        out << node->elm << ",";
+    }
+
+    if (node->right) {
+        traversal((const SecuBinaryNode *&)node->right, out);
+    }
+}
+
 SecuBinaryNode *
-BinarySearchTree::clone(const SecuBinaryNode * node) const {
+BinarySearchTree2::clone(const SecuBinaryNode * node) const {
     SecuBinaryNode * temp = new SecuBinaryNode(node->elm, NULL, NULL, NULL);
     if (node->left != NULL)
         temp->left = clone((SecuBinaryNode *)node->left);
@@ -249,7 +232,7 @@ BinarySearchTree::clone(const SecuBinaryNode * node) const {
 // 对于双子节点，再替换完成后最后的地方取处理
 // 如果放在此方法中处理，可能会在删除时造成死循环
 void
-BinarySearchTree::transplant(SecuBinaryNode * &a, SecuBinaryNode * &b) {
+BinarySearchTree2::transplant(SecuBinaryNode * &a, SecuBinaryNode * &b) {
     if (a->parent == NULL) {
         root = b;
     } else if (a->parent->left == a) {
@@ -260,9 +243,9 @@ BinarySearchTree::transplant(SecuBinaryNode * &a, SecuBinaryNode * &b) {
 
     b->parent = a->parent;
 }
-
+/*
 int main() {
-    BinarySearchTree * tree = new BinarySearchTree();
+    BinarySearchTree2 * tree = new BinarySearchTree2();
     tree->insert(30);
     tree->insert(20);
     tree->insert(40);
@@ -288,4 +271,4 @@ int main() {
 
     return 0;
 
-}
+}*/

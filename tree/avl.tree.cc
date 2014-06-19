@@ -1,59 +1,22 @@
+#include <iostream>
+#include <cctype>
+#include "avl.tree.h"
 #include "printTree.h"
-#include "math.h"
 
-class AvlNode: public BinaryNode{
-public:
-    int height;
-    AvlNode * parent;
+using namespace std;
 
-    AvlNode(int d, AvlNode * l, AvlNode * r,
-            AvlNode * p): BinaryNode(d, l, r),
-            parent(p), height(0) {}
-};
+// 构造函数
+AvlTree::AvlTree():root(NULL) {}
 
-class AvlTree {
-public:
-    AvlTree();
-    AvlTree(AvlTree & tree);
-    ~AvlTree();
+AvlTree::AvlTree(const AvlTree & tree) {
+    *this = tree;
+}
 
-    int findMin() const;
-    int findMax() const;
+AvlTree::~AvlTree() {
+    makeEmpty();
+}
 
-    bool contains(const int d) const;
-    bool isEmpty() const;
-    void makeEmpty();
-
-    void insert(const int d);
-    void remove(const int d);
-
-    AvlTree & operator=(const AvlTree & tree);
-
-    AvlNode * root;
-
-private:
-    AvlNode * findMin(AvlNode * node) const;
-    AvlNode * findMax(AvlNode * node) const;
-    bool contains(const AvlNode * &node,  const int d) const;
-
-    void insert(AvlNode * &node, AvlNode * pnode, const int d);
-    void remove(AvlNode * &node, const int d);
-
-    void makeEmpty(AvlNode * &node);
-    AvlNode * clone(const AvlNode * &node);
-
-    void updateHeight(AvlNode * &node);
-    void transplant(AvlNode *&node1, AvlNode *&node2);
-
-    int getHeight(const AvlNode *&node) const;
-    void blanceTree(AvlNode * &node);
-    void leftRotate(AvlNode * &node);
-    void rightRotate(AvlNode * &node);
-    void rightLeftRotate(AvlNode * &node);
-    void leftRightRotate(AvlNode * &node);
-};
-
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 int
 AvlTree::findMin() const {
@@ -73,6 +36,21 @@ AvlTree::contains(const int d) const {
 }
 
 void
+AvlTree::makeEmpty() {
+    makeEmpty(root);
+}
+
+bool
+AvlTree::isEmpty() const {
+
+}
+
+void
+AvlTree::traversal(ostringstream & out) const {
+    traversal((const AvlNode *&)root, out);
+}
+
+void
 AvlTree::insert(int d) {
     insert(root, NULL, d);
 }
@@ -81,12 +59,6 @@ void
 AvlTree::remove(int d) {
     remove(root, d);
 }
-
-void
-AvlTree::makeEmpty() {
-    makeEmpty(root);
-}
-
 
 AvlTree &
 AvlTree::operator=(const AvlTree & tree) {
@@ -97,13 +69,38 @@ AvlTree::operator=(const AvlTree & tree) {
     return *this;
 }
 
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-AvlNode * AvlTree::findMin(AvlNode * node) const {
+AvlNode *
+AvlTree::findMin(AvlNode * node) const {
     if (node->left)
         return findMin((AvlNode * )node->left);
     else
         return node;
+}
+
+AvlNode *
+AvlTree::findMax(AvlNode * node) const {
+    if (node->right)
+        return findMax((AvlNode * )node->right);
+    else
+        return node;
+}
+
+
+bool
+AvlTree::contains(const AvlNode * &node,  const int data) const {
+    if (!node)
+        return false;
+    else {
+        if (data < node->elm) {
+            return contains((const AvlNode *&)node->left, data);
+        } else if (data > node->elm) {
+            return contains((const AvlNode *&)node->right, data);
+        } else {
+            return true;
+        }
+    }
 }
 
 /*
@@ -133,26 +130,33 @@ AvlTree::insert(AvlNode * &node, AvlNode * pnode, int d) {
     } else if (d<node->elm) {
         insert((AvlNode*&)node->left,node, d);
 
-        AvlNode * tmpNode = (AvlNode *)node->left;
-        // 重新平衡
-        if (getHeight((const AvlNode *&)tmpNode->right) -
-                getHeight((const AvlNode *&)tmpNode->left) == 2) {
-            leftRightRotate(node);
-        } else {
-            rightRotate(node);
+        // 检查平衡性
+        if (getHeight((const AvlNode *&)node->left) -
+                getHeight((const AvlNode *&)node->right) == 2) {
+                AvlNode * tmpNode = (AvlNode *)node->left;
+            if (getHeight((const AvlNode *&)tmpNode->right) >
+                getHeight((const AvlNode *&)tmpNode->left)) {
+                leftRightRotate(node);
+            } else {
+                rightRotate(node);
+            }
         }
 
     } else if (d>node->elm) {
         insert((AvlNode*&)node->right,node, d);
 
-        AvlNode * tmpNode = (AvlNode *)node->right;
-        // 重新平衡
-        if (getHeight((const AvlNode *&)tmpNode->left) -
-                getHeight((const AvlNode *&)tmpNode->right) == 2) {
-            rightLeftRotate(node);
-        } else {
-            leftRotate(node);
+        // 检查平衡性
+        if (getHeight((const AvlNode *&)node->right) -
+                getHeight((const AvlNode *&)node->left) == 2) {
+                AvlNode * tmpNode = (AvlNode *)node->right;
+            if (getHeight((const AvlNode *&)tmpNode->left) >
+                getHeight((const AvlNode *&)tmpNode->right)) {
+                rightLeftRotate(node);
+            } else {
+                leftRotate(node);
+            }
         }
+
     } else
         ; // If d exists, do nothing.
 
@@ -213,6 +217,24 @@ AvlTree::makeEmpty(AvlNode * &node) {
         delete node;
     }
     node = NULL;
+}
+
+void
+AvlTree::traversal(const AvlNode *& node, ostringstream & out) const {
+    if (!node)
+        return;
+
+    if (node->left) {
+        traversal((const AvlNode *&)node->left, out);
+    }
+
+    if (node) {
+        out << node->elm << ",";
+    }
+
+    if (node->right) {
+        traversal((const AvlNode *&)node->right, out);
+    }
 }
 
 AvlNode *
@@ -280,7 +302,7 @@ AvlTree::getHeight(const AvlNode *&node) const {
     return node ? node->height : 0;
 }
 
-
+/*
 void
 AvlTree::blanceTree(AvlNode * &node) {
     int l(0), r(0);
@@ -297,7 +319,7 @@ AvlTree::blanceTree(AvlNode * &node) {
 
         AvlNode * heavyNode;
 
-        if (l == 0 && abs(r - l) > 1) {
+        if (l == 0 && abs(r-l) > 1) {
             heavyNode = (AvlNode *)node->right;
 
             if (heavyNode->left) {
@@ -331,7 +353,7 @@ AvlTree::blanceTree(AvlNode * &node) {
             }
         }
     }
-}
+}*/
 
 void
 AvlTree::leftRotate(AvlNode * &node){
@@ -399,4 +421,33 @@ void
 AvlTree::leftRightRotate(AvlNode * &node){
     leftRotate((AvlNode *&)node->left);
     rightRotate(node);
+}
+
+int main() {
+    AvlTree * tree = new AvlTree();
+    tree->insert(30);
+    tree->insert(20);
+    tree->insert(40);
+    tree->insert(10);
+    tree->insert(25);
+    tree->insert(35);
+    tree->insert(50);
+    tree->insert(5);
+    tree->insert(15);
+    tree->insert(28);
+    tree->insert(41);
+
+    cout << "Print tree:"<<endl;
+    //tree->printfTree(cout);
+    printPretty(tree->root, 1, 0, cout);
+
+    tree->remove(30);
+    cout << "After remove root item:" <<endl;
+    //tree->printfTree(cout);
+    printPretty(tree->root, 1, 0, cout);
+
+    tree->makeEmpty();
+
+    return 0;
+
 }
