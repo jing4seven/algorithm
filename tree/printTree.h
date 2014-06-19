@@ -7,17 +7,9 @@
 #include <sstream>
 #include <string>
 #include <math.h>
+#include "binary.node.h"
 
 using namespace std;
-
-class BinaryNode {
-public:
-    int elm;
-    BinaryNode * left;
-    BinaryNode * right;
-    BinaryNode(const int & theElm, BinaryNode * l,
-            BinaryNode * r): elm(theElm), left(l), right(r){};
-};
 
 int maxHeight(BinaryNode *);
 string intToString(int);

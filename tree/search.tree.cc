@@ -1,67 +1,15 @@
-/*
- * 二叉查找树
- * 插入删除操作用替换数据实现
- *
- * 特征：
- * 1. 对于二叉树中的每个节点X，其左子树中所有项的值
- *    都小于X中的项，而它的右子树中的所有项都大于X
- *    中的项.
- *
-*
- * 注：
- * 1. 这里为了方便起见，没有将接口和实现分离，
- *    如果在正式的项目中，最好还是分离；
- * 2. 数据元素直接用int实现，也是为了方便验证；
- * 3. 这个版本的二叉搜索树在插入和删除节点的实现上
- *    用的时数据替换，不是真实的节点替换；
- *    在某些情况下，这样做会导致一些问题，被删除的节点
- *    也许并不是传递到删除过程中的那个节点。
- *    如果一个程序的其他部分要维持一些指向节点的指针，
- *    那么他们可能会被这些已删除节点的“过时”指针带来错
- *    误的影响。
- */
-
-// 接口部分
-
 #include <iostream>
 #include <exception>
 #include <cctype>
+#include <stdexcept>
 #include "printTree.h"
+#include "search.tree.h"
 
-class UnderflowException {};
+using namespace std;
 
-// 二叉树定义
-class BinarySearchTree {
-public:
-    BinarySearchTree();
-    BinarySearchTree(BinarySearchTree & tree);
-    ~BinarySearchTree();
+////////////////////////////////////////////////////////////////////////////////
 
-    int findMin() const;
-    int findMax() const;
-    bool contains(const int data) const;
-    bool isEmpty() const;
-    void printfTree(ostream & out) const;
-
-    void makeEmpty();
-    void insert(const int data);
-    void remove(const int data);
-    BinarySearchTree &  operator=(BinarySearchTree & tree);
-    BinaryNode * root;
-
-private:
-    BinaryNode * findMin(BinaryNode * node) const;
-    BinaryNode * findMax(BinaryNode * node) const;
-    bool contains(const int data, BinaryNode * node) const;
-    void insert(const int data, BinaryNode * &node);
-    void remove(const int data, BinaryNode * &node);
-
-    void makeEmpty(BinaryNode * &node);
-    void printfTree(const BinaryNode * node, ostream & out) const;
-    BinaryNode * clone(const BinaryNode * t) const;
-};
-
-// 实现部分
+// 构造函数
 BinarySearchTree::BinarySearchTree():root(NULL) {}
 
 BinarySearchTree::BinarySearchTree(BinarySearchTree & tree) {
@@ -72,10 +20,11 @@ BinarySearchTree::~BinarySearchTree() {
     makeEmpty();
 }
 
+// 公共函数
 int
 BinarySearchTree::findMin() const {
     if (isEmpty() ) {
-        throw new UnderflowException();
+        throw new overflow_error("Tree is empty.");
     }
 
     return findMin(root)->elm;
@@ -84,7 +33,7 @@ BinarySearchTree::findMin() const {
 int
 BinarySearchTree::findMax() const {
     if (isEmpty()) {
-        throw new UnderflowException();
+        throw new overflow_error("Tree is empty.");
     }
 
     return findMax(root)->elm;
@@ -95,7 +44,7 @@ BinarySearchTree::contains(const int data) const {
     if (isdigit(data)) {
         return false;
     }
-    return contains(data, root);
+    return contains((const BinaryNode *&)root, data);
 }
 
 bool
@@ -111,16 +60,16 @@ BinarySearchTree::makeEmpty() {
 void
 BinarySearchTree::insert(const int data) {
     // 传递root节点的引用
-    insert(data, root);
+    insert(root, data);
 }
 
 void
 BinarySearchTree::remove(const int data) {
-    remove(data, root);
+    remove(root, data);
 }
 
 BinarySearchTree &
-BinarySearchTree::operator=(BinarySearchTree & tree) {
+BinarySearchTree::operator=(const BinarySearchTree & tree) {
     if (this != &tree) {
         makeEmpty();
         root = clone(tree.root);
@@ -128,13 +77,7 @@ BinarySearchTree::operator=(BinarySearchTree & tree) {
     return *this;
 }
 
-void
-BinarySearchTree::printfTree(ostream & out) const {
-    if (isEmpty())
-        out << "Empty tree" << endl;
-    else
-        printfTree(root, out);
-}
+////////////////////////////////////////////////////////////////////////////////
 
 BinaryNode *
 BinarySearchTree::findMin(BinaryNode * node) const {
@@ -163,44 +106,44 @@ BinarySearchTree::findMax(BinaryNode * node) const {
 }
 
 bool
-BinarySearchTree::contains(const int data, BinaryNode * node) const {
+BinarySearchTree::contains(const BinaryNode * &node, const int data) const {
     if (node == NULL) {
         return false;
     } else if (data < node->elm) {
-        contains(data, node->left);
+        contains((const BinaryNode *&)node->left, data);
     } else if (data > node->elm) {
-        return contains(data, node->right);
+        return contains((const BinaryNode *&)node->right, data);
     } else if (data == node->elm) {
         return true;
     }
 }
 void
-BinarySearchTree::insert(const int data, BinaryNode * & node) {
+BinarySearchTree::insert(BinaryNode * & node, const int data) {
     if (node == NULL) {
         // 如果node为空，表示其为根节点
         // 那么直接对其引用赋值，实例化一个node给它.
         node = new BinaryNode(data, NULL, NULL);
     } else if (data < node->elm){
-        insert(data, node->left);
+        insert(node->left, data);
     } else if (data > node->elm) {
-        insert(data, node->right);
+        insert(node->right, data);
     }
 }
 
 // 这里
 void
-BinarySearchTree::remove(const int data, BinaryNode * &node) {
+BinarySearchTree::remove(BinaryNode * &node, const int data) {
     if (node == NULL) {
         return;
     } else if (data < node->elm) {
-        remove(data, node->left);
+        remove(node->left, data);
     } else if (data > node->elm) {
-        remove(data, node->right);
+        remove(node->right, data);
     } else {
         if (node->left != NULL && node->right != NULL) {
             // 如果有两个子节点, 删除右子节点中最小节点；
             node->elm = findMin(node->right)->elm;
-            remove(node->elm, node->right);
+            remove(node->right, node->elm);
         } else  {
             // 如果只有一个子节点或者根本没有子节点，直接删除
             BinaryNode * oldElm = node;
@@ -227,16 +170,7 @@ BinarySearchTree::clone(const BinaryNode * node) const {
     else
         return new BinaryNode(node->elm, clone(node->left), clone(node->right));
 }
-
-void
-BinarySearchTree::printfTree(const BinaryNode * node, ostream & out) const {
-    if (node != NULL) {
-        printfTree(node->left, out);
-        out << node->elm << endl;
-        printfTree(node->right, out);
-    }
-}
-
+/*
 int main() {
     BinarySearchTree * tree = new BinarySearchTree();
     tree->insert(30);
@@ -263,4 +197,4 @@ int main() {
     tree->makeEmpty();
     return 0;
 
-}
+}*/
