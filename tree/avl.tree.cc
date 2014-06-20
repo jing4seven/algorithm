@@ -37,12 +37,16 @@ AvlTree::contains(const int d) const {
 
 void
 AvlTree::makeEmpty() {
-    makeEmpty(root);
+    cout << "yes1" <<endl;
+    if (isEmpty() == false) {
+        cout << "yes2" <<endl;
+        makeEmpty(root);
+    }
 }
 
 bool
 AvlTree::isEmpty() const {
-
+    return getHeight((const AvlNode*&)root) == 0 ? true : false;
 }
 
 void
@@ -172,7 +176,9 @@ AvlTree::remove(AvlNode * &node, int d) {
     } else if (node->elm > d){
         remove((AvlNode *&)node->left, d);
     } else {
-        AvlNode * tagNode;
+        AvlNode * tagNode,  // 记录平衡可能被打破的节点
+                * dNode;    // 记录即将被删除的节点
+
         if (node->right != NULL && node->left != NULL) {
             // 首先找到右节点中最小值节点
             AvlNode * tmpNode = findMin((AvlNode *)(node->right));
@@ -180,44 +186,80 @@ AvlTree::remove(AvlNode * &node, int d) {
             // 如果最小节点就是node的右节点
             // 直接用node的右节点代替node
             if (tmpNode == node->right) {
+                dNode = node;
+                tmpNode->left = node->left;
+
+                if (node->left)
+                    ((AvlNode *)node->left)->parent = tmpNode;
+
                 //  记录平衡可能被打破的节点
                 tagNode = tmpNode;
-                tmpNode->left = node->left;
                 transplant(node, (AvlNode *&)node->right);
             } else {
             // 否则，先用tmpNode代替node, 再将tmpNode的子节点
             // （右节点）并入到tmpNode原先的父节的左子节点上
                 AvlNode * tmpPNode = tmpNode->parent;
 
-                //  记录平衡可能被打破的节点
-                tagNode = tmpPNode;
-
+                dNode = node;
                 tmpPNode->left = tmpNode->right;
+                //tmpPNode->parent = tmpNode;
 
                 tmpNode->left = node->left;
                 tmpNode->right= node->right;
+
+                if (node->left)
+                    ((AvlNode *)node->left)->parent = tmpNode;
+
+                if (node->right)
+                    ((AvlNode *)node->right)->parent = tmpNode;
+
+                //  记录平衡可能被打破的节点
+                tagNode = tmpPNode;
+
                 transplant(node, tmpNode);
             }
         } else {
             // 此时直接删除即可
             // 首先需要计算子节点
-            AvlNode * tmpNode = node->left == NULL ?
+            AvlNode * tmpNode = node->left != NULL ?
                 (AvlNode *)node->left :
                 (AvlNode *)node->right;
 
-            //  记录平衡可能被打破的节点
-            tagNode = tmpNode;
+            if (tmpNode == NULL) {
+                // 记录平衡可能被打破的节点
+                tagNode = node->parent;
+                dNode = node;
 
-            transplant(node, tmpNode);
+                if (node->parent) {
+                //cout << node->parent->elm<<endl;
+                    if (node->parent->left == node) {
+                        node->parent->left = NULL;
+                    } else {
+                        node->parent->right = NULL;
+                    }
+                }
+            } else {
+                // 记录平衡可能被打破的节点
+                tagNode = node->parent;
+                dNode = node;
+                transplant(node, tmpNode);
+            }
         }
 
         delete node;
+
         updateHeight(root);
-/*
+
+        if (tagNode == NULL)
+            return;
+
         // 检查并修复平衡性
-        if ( getHeight((const AvlNode *&)tagNode->left)-
-                getHeight((const AvlNode *&)tagNode->right) == 2) {
-            AvlNode * subNode = (AvlNode *&)tagNode->left;
+        int lH(0), rH(0);
+        lH = getHeight((const AvlNode *&)tagNode->left);
+        rH = getHeight((const AvlNode *&)tagNode->right);
+
+        if ( lH - rH == 2) {
+            AvlNode * subNode = (AvlNode *)tagNode->left;
 
             if ( getHeight((const AvlNode *&)subNode->right) >
                         getHeight((const AvlNode *&)subNode->left)) {
@@ -225,9 +267,8 @@ AvlTree::remove(AvlNode * &node, int d) {
             } else {
                 rightRotate(tagNode);
             }
-        } else if ( getHeight((const AvlNode *&)tagNode->right)-
-                getHeight((const AvlNode *&)tagNode->left) == 2) {
-            AvlNode * subNode = (AvlNode *&)tagNode->left;
+        } else if ( rH - lH == 2) {
+            AvlNode * subNode = (AvlNode *)tagNode->right;
 
             if ( getHeight((const AvlNode *&)subNode->left) >
                         getHeight((const AvlNode *&)subNode->right)) {
@@ -235,17 +276,15 @@ AvlTree::remove(AvlNode * &node, int d) {
             } else {
                 leftRotate(tagNode);
             }
-        }*/
+        }
     }
 }
 
 void
 AvlTree::makeEmpty(AvlNode * &node) {
-    if (node != NULL) {
         makeEmpty((AvlNode *&)node->left);
         makeEmpty((AvlNode *&)node->right);
         delete node;
-    }
 }
 
 void
@@ -306,6 +345,7 @@ AvlTree::updateHeight(AvlNode * &node) {
     }
 
     node->height = (lH > rH ? lH : rH) + 1;
+    //cout << "node:" <<node->elm<<":"<< node->height <<endl;
 }
 
 // Replace node1 with node 2
@@ -315,131 +355,85 @@ AvlTree::transplant(AvlNode *&node1, AvlNode *&node2){
         return;
     }
 
+    AvlNode * tmpNode = node1;
+
     if (node1->parent == NULL) {
         root = node2;
-        root->parent = NULL;
-        return;
     } else {
         if (node1->parent->left == node1) {
             node1->parent->left = node2;
         } else
             node1->parent->right = node2;
-
-        node2->parent = node1->parent;
     }
+    node2->parent = tmpNode->parent;
 }
 
 int
 AvlTree::getHeight(const AvlNode *&node) const {
-    return node ? node->height : 0;
+    return node!=NULL ? node->height : 0;
 }
-
-/*
-void
-AvlTree::blanceTree(AvlNode * &node) {
-    int l(0), r(0);
-    if (node) {
-        if (node->left) {
-            l=((AvlNode *)node->left)->height + 1;
-            blanceTree((AvlNode *&)node->left);
-        }
-
-        if (node->right) {
-            r=((AvlNode *)node->right)->height + 1;
-            blanceTree((AvlNode *&)node->right);
-        }
-
-        AvlNode * heavyNode;
-
-        if (l == 0 && abs(r-l) > 1) {
-            heavyNode = (AvlNode *)node->right;
-
-            if (heavyNode->left) {
-                l=((AvlNode *)heavyNode->left)->height + 1;
-            }
-
-            if (node->right) {
-                r=((AvlNode *)heavyNode->right)->height + 1;
-            }
-
-            if (l>r) {
-                rightLeftRotate(node);
-            } else if (r > l) {
-                leftRotate(node);
-            }
-        } else if (r == 0 && abs(l-r) > 1) {
-            heavyNode = (AvlNode *)node->left;
-
-            if (heavyNode->left) {
-                l=((AvlNode *)heavyNode->left)->height + 1;
-            }
-
-            if (node->right) {
-                r=((AvlNode *)heavyNode->right)->height + 1;
-            }
-
-            if (r>l) {
-                leftRightRotate(node);
-            } else if (l>r) {
-                rightRotate(node);
-            }
-        }
-    }
-}*/
 
 void
 AvlTree::leftRotate(AvlNode * &node){
-    AvlNode * tmp = (AvlNode *)node->right;
-    if (tmp) {
-        node->right = tmp->left;
-        ((AvlNode *)tmp->left)->parent = node;
+    AvlNode * subNode = (AvlNode *)node->right;
+    AvlNode * tmpNode = node;
 
-        if (node->parent) {
-            root = tmp;
-        } else if (((AvlNode *)node->parent)->left == node) {
-            ((AvlNode *)node->parent)->left= tmp;
+    if (subNode) {
+        tmpNode->right = subNode->left;
+
+        if (subNode->left)
+            ((AvlNode *)subNode->left)->parent = tmpNode;
+
+        if (tmpNode->parent==NULL) {
+            root = subNode;
+        } else if (((AvlNode *)tmpNode->parent)->left == tmpNode) {
+            ((AvlNode *)tmpNode->parent)->left= subNode;
         } else {
-            ((AvlNode *)node->parent)->right= tmp;
+            ((AvlNode *)tmpNode->parent)->right= subNode;
         }
 
-        tmp->parent  = node->parent;
-        tmp->left    = node;
-        node->parent = tmp;
-        // 更新节点高度
-        node->height = max(getHeight((const AvlNode *&)node->left),
-                getHeight((const AvlNode *&)node->right))+1;
-        tmp->height  = max(getHeight((const AvlNode *&)tmp->right),
-                getHeight((const AvlNode *&)node)) + 1;
+        subNode->parent = tmpNode ->parent;
+        subNode->left   = tmpNode;
+        tmpNode->parent    = subNode;
 
-        node         = tmp;
+        // 更新节点高度
+        tmpNode->height    = max(getHeight((const AvlNode *&)tmpNode->left),
+                getHeight((const AvlNode *&)tmpNode->right))+1;
+        subNode->height = max(getHeight((const AvlNode *&)subNode->right),
+                getHeight((const AvlNode *&)tmpNode)) + 1;
+        tmpNode            = subNode;
     }
 }
 
 void
 AvlTree::rightRotate(AvlNode * &node){
-    AvlNode * tmp = (AvlNode *)node->left;
+    AvlNode * subNode = (AvlNode *)node->left;
+    AvlNode * tmpNode = node;
 
-    if (tmp) {
-        node->left = tmp->right;
-        ((AvlNode *)tmp->right)->parent = node;
+    if (subNode) {
+        tmpNode->left = subNode->right;
 
-        if (node->parent) {
-            root = tmp;
-        } else if (((AvlNode *)node->parent)->left == node) {
-            ((AvlNode *)node->parent)->left= tmp;
+        if (subNode->right)
+            ((AvlNode *)subNode->right)->parent = tmpNode;
+
+        if (tmpNode->parent==NULL) {
+            root = subNode;
+        } else if (((AvlNode *)tmpNode->parent)->left == tmpNode) {
+            ((AvlNode *)tmpNode->parent)->left= subNode;
         } else {
-            ((AvlNode *)node->parent)->right= tmp;
+            ((AvlNode *)tmpNode->parent)->right= subNode;
         }
 
-        tmp->parent  = node->parent;
-        tmp->right   = node;
-        node->parent = tmp;
+        subNode->parent = tmpNode->parent;
+        subNode->right  = tmpNode;
+        tmpNode->parent = subNode;
+
         // 更新节点高度
-        node->height = max(getHeight((const AvlNode *&)node->left),
-                getHeight((const AvlNode *&)node->right))+1;
-        tmp->height  = max(getHeight((const AvlNode *&)tmp->left),
-                getHeight((const AvlNode *&)node)) + 1;
-        node         = tmp;
+        tmpNode->height = max(getHeight((const AvlNode *&)tmpNode->left),
+                getHeight((const AvlNode *&)tmpNode->right))+1;
+        subNode->height = max(getHeight((const AvlNode *&)subNode->left),
+                getHeight((const AvlNode *&)tmpNode)) + 1;
+        tmpNode            = subNode;
     }
 }
 
@@ -458,28 +452,40 @@ AvlTree::leftRightRotate(AvlNode * &node){
 int main() {
     AvlTree * tree = new AvlTree();
     tree->insert(30);
-    tree->insert(20);
-    tree->insert(40);
-    tree->insert(10);
-    tree->insert(25);
-    tree->insert(35);
-    tree->insert(50);
-    tree->insert(5);
-    tree->insert(15);
-    tree->insert(28);
-    tree->insert(41);
+/*    tree->insert(20);*/
+    //tree->insert(40);
+    //tree->insert(10);
+    //tree->insert(25);
+    //tree->insert(35);
+    //tree->insert(50);
+    //tree->insert(5);
+    //tree->insert(15);
+    //tree->insert(28);
+    //tree->insert(41);
 
     cout << "Print tree:"<<endl;
     //tree->printfTree(cout);
     printPretty(tree->root, 1, 0, cout);
 
     tree->remove(30);
+    /*tree->remove(20);*/
+    //tree->remove(5);
+    //tree->remove(10);
+    //tree->remove(50);
+    //tree->remove(41);
+    //tree->remove(40);
+    //tree->remove(28);
+    //tree->remove(25);
+    /*tree->remove(35);*/
+    //tree->remove(15);
+
+
     cout << "After remove root item:" <<endl;
+    cout << tree->root->elm <<endl;
     //tree->printfTree(cout);
     printPretty(tree->root, 1, 0, cout);
 
     tree->makeEmpty();
 
     return 0;
-
 }

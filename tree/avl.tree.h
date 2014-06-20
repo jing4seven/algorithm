@@ -22,8 +22,8 @@ using namespace std;
 
 class AvlNode: public BinaryNode{
 public:
-    int height;
     AvlNode * parent;
+    int height;
 
     AvlNode(int d, AvlNode * l, AvlNode * r,
             AvlNode * p): BinaryNode(d, l, r),
