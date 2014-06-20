@@ -180,7 +180,7 @@ AvlTree::remove(AvlNode * &node, int d) {
         remove((AvlNode *&)node->left, d);
     } else {
         AvlNode * tagNode,          // 记录平衡可能被打破的节点
-                * dNode = node;    // 记录即将被删除的节点
+                * dNode = node;     // 记录即将被删除的节点
 
         if (node->right != NULL && node->left != NULL) {
             // 首先找到右节点中最小值节点
@@ -335,7 +335,6 @@ AvlTree::updateHeight(AvlNode * &node) {
     }
 
     node->height = (lH > rH ? lH : rH) + 1;
-    //cout << "node:" <<node->elm<<":"<< node->height <<endl;
 }
 
 // Replace node1 with node 2
@@ -440,7 +439,7 @@ AvlTree::leftRightRotate(AvlNode * &node){
     leftRotate((AvlNode *&)node->left);
     rightRotate(node);
 }
-
+/*
 int main() {
     AvlTree * tree = new AvlTree();
     tree->insert(30);
@@ -489,4 +488,4 @@ int main() {
     tree->makeEmpty();
     tree2->makeEmpty();
     return 0;
-}
+}*/

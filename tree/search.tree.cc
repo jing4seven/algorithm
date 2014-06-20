@@ -117,7 +117,7 @@ BinarySearchTree::contains(const BinaryNode * &node, const int data) const {
         return contains((const BinaryNode *&)node->left, data);
     } else if (data > node->elm) {
         return contains((const BinaryNode *&)node->right, data);
-    } else if (data == node->elm) {
+    } else {
         return true;
     }
 }
@@ -151,9 +151,10 @@ BinarySearchTree::remove(BinaryNode * &node, const int data) {
             remove(node->right, node->elm);
         } else  {
             // 如果只有一个子节点或者根本没有子节点，直接删除
-            BinaryNode * oldElm = node;
+            BinaryNode * dNode = node;
             node = node->left != NULL ? node->left : node->right;
-            delete oldElm;
+            delete dNode;
+            dNode = NULL;
         }
     }
 }
@@ -163,9 +164,10 @@ BinarySearchTree::makeEmpty(BinaryNode * &node) {
     if (node !=NULL) {
         makeEmpty(node->left);
         makeEmpty(node->right);
+
         delete node;
+        node = NULL;
     }
-    node = NULL;
 }
 
 void

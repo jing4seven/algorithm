@@ -121,46 +121,57 @@ BinarySearchTree2::remove(SecuBinaryNode * &node, int d) {
         // 找到节点后，查看其左右子节点是否存在
         // 如果两个子节点都存在
         // 情况稍微复杂一点
-        SecuBinaryNode * temp = NULL;
-        SecuBinaryNode * dNode = NULL;
+        SecuBinaryNode * tmpNode = NULL;
+        SecuBinaryNode * dNode = node;
         if (node->left != NULL && node->right !=NULL ) {
-            temp  = findMin((SecuBinaryNode *)node->right);
+            tmpNode  = findMin((SecuBinaryNode *)node->right);
 
             // 如果要直接右子节点就是右边最小的节点
             // 直接和node交换
-            if (temp == node->right) {
-                dNode = node;
-                transplant(node, temp);
-                node->right = temp->right;
-                ((SecuBinaryNode *)temp->right)->parent = node;
+            if (tmpNode == node->right) {
+                //node->right = tmpNode->right;
+                //((SecuBinaryNode *)tmpNode->right)->parent = node;
+                tmpNode->left = node->left;
             } else {
-                // 如果不是，将右边最小的节点替换node
-                dNode = node;
-                transplant(node, temp);
                 // 维护最小节点的父节点的left, right
-                if (temp->parent->left == temp) {
-                    temp->parent->left = temp->right;
+                if (tmpNode->parent->left == tmpNode) {
+                    tmpNode->parent->left = tmpNode->right;
                 } else {
-                    temp->parent->right = temp->right;
+                    tmpNode->parent->right = tmpNode->right;
                 }
+
+                tmpNode->left = node->left;
+                tmpNode->right= node->right;
             }
 
-            node->left = dNode->left;
-            node->right= dNode->right;
-            delete dNode;
-
+            //node->left = dNode->left;
+            //node->right= dNode->right;
         // 只有一个子节点存在时
         // 直接用字节点替换即可
-        } else {
-            if (node->left==NULL)
-                temp = (SecuBinaryNode *)node->right;
-            else if (node->right == NULL)
-                temp = (SecuBinaryNode *)node->left;
 
-            dNode = node;
-            transplant(node, temp);
-            delete dNode;
+            if (node->left)
+                ((SecuBinaryNode *)node->left)->parent = tmpNode;
+
+            if (node->right)
+                ((SecuBinaryNode *)node->right)->parent = tmpNode;
+        } else {
+            if (node->left!=NULL)
+                tmpNode = (SecuBinaryNode *)node->left;
+
+            if (node->right != NULL)
+                tmpNode = (SecuBinaryNode *)node->right;
         }
+/*
+        if (tmpNode) {
+            tmpNode->left = node->left;
+            tmpNode->right= node->right;
+        }a*/
+
+
+        transplant(node, tmpNode);
+
+        delete dNode;
+        dNode = NULL;
     }
 }
 
@@ -194,14 +205,14 @@ BinarySearchTree2::makeEmpty(SecuBinaryNode * &node) {
         makeEmpty((SecuBinaryNode *&)node->right);
 
         delete node;
+        node = NULL;
     }
-    node = NULL;
 }
 
 void
 BinarySearchTree2::traversal (const SecuBinaryNode * &node, ostringstream & out)
     const {
-    if (!node)
+    if (node==NULL)
         return;
 
     if (node->left) {
@@ -232,16 +243,22 @@ BinarySearchTree2::clone(const SecuBinaryNode * node) const {
 // 对于双子节点，再替换完成后最后的地方取处理
 // 如果放在此方法中处理，可能会在删除时造成死循环
 void
-BinarySearchTree2::transplant(SecuBinaryNode * &a, SecuBinaryNode * &b) {
-    if (a->parent == NULL) {
-        root = b;
-    } else if (a->parent->left == a) {
-        a->parent->left =b;
+BinarySearchTree2::transplant(SecuBinaryNode * &node1, SecuBinaryNode * &node2) {
+    if (node1 == node2)
+        return;
+
+    SecuBinaryNode * tmpNode  = node1;
+
+    if (node1->parent == NULL) {
+        root = node2;
+    } else if (node1->parent->left == node1) {
+        node1->parent->left =node2;
     } else {
-        a->parent->right=b;
+        node1->parent->right=node2;
     }
 
-    b->parent = a->parent;
+    if (node2!=NULL)
+        node2->parent = tmpNode->parent;
 }
 /*
 int main() {
@@ -262,7 +279,32 @@ int main() {
     //tree->printfTree(cout);
     printPretty(tree->root, 1, 0, cout);
 
+    tree->remove(115);
+
     tree->remove(30);
+    printPretty(tree->root, 1, 0, cout);
+    tree->remove(20);
+    printPretty(tree->root, 1, 0, cout);
+    tree->remove(5);
+    printPretty(tree->root, 1, 0, cout);
+    tree->remove(10);
+    printPretty(tree->root, 1, 0, cout);
+    tree->remove(50);
+    printPretty(tree->root, 1, 0, cout);
+    tree->remove(41);
+    printPretty(tree->root, 1, 0, cout);
+    tree->remove(40);
+    printPretty(tree->root, 1, 0, cout);
+    tree->remove(28);
+    printPretty(tree->root, 1, 0, cout);
+    tree->remove(25);
+    printPretty(tree->root, 1, 0, cout);
+    tree->remove(35);
+    printPretty(tree->root, 1, 0, cout);
+    tree->remove(15);
+    printPretty(tree->root, 1, 0, cout);
+
+
     cout << "After remove root item:" <<endl;
     //tree->printfTree(cout);
     printPretty(tree->root, 1, 0, cout);

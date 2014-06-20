@@ -135,26 +135,69 @@ namespace {
     TEST_F(BinarySearchTreeTest, removeTest) {
         ostringstream osm0, osm1, osm2, testDataOsm;
 
+        //t0_/////////////////////////////////////////////
+        // 删除一个不存在的元素
+        t0_->remove(115);
+
+        // 按同样顺序删除全部元素
         t0_->remove(30);
+        t0_->remove(20);
+        t0_->remove(5);
+        t0_->remove(10);
+        t0_->remove(50);
+        t0_->remove(41);
+        t0_->remove(40);
+        t0_->remove(28);
         t0_->remove(25);
+        t0_->remove(35);
+        t0_->remove(15);
 
+        //t1_/////////////////////////////////////////////
+        // 按同样顺序删除全部元素
+        t1_->remove(115);
+
+        // 将全部元素删除
         t1_->remove(30);
+        t1_->remove(20);
+        t1_->remove(5);
+        t1_->remove(10);
+        t1_->remove(50);
+        t1_->remove(41);
+        t1_->remove(40);
+        t1_->remove(28);
         t1_->remove(25);
+        t1_->remove(35);
+        t1_->remove(15);
 
+        //t2_/////////////////////////////////////////////
+        // 按同样顺序删除全部元素
+        t2_->remove(115);
+
+        // 将全部元素删除
         t2_->remove(30);
+        t2_->remove(20);
+        t2_->remove(5);
+        t2_->remove(10);
+        t2_->remove(50);
+        t2_->remove(41);
+        t2_->remove(40);
+        t2_->remove(28);
         t2_->remove(25);
+        t2_->remove(35);
+        t2_->remove(15);
 
         t0_->traversal(osm0);
         t1_->traversal(osm1);
         t1_->traversal(osm2);
 
-        sort(testData.begin(), testData.end(), less<int>());
+        /*sort(testData.begin(), testData.end(), less<int>());
         vector<int>::const_iterator iter = testData.begin();
         while (iter != testData.end()) {
             if (*iter != 30 && *iter != 25)
                 testDataOsm << *iter << ",";
             ++iter;
-        }
+        }*/
+        testDataOsm << "";
 
         //printPretty(t0_->root, 1, 0, cout);
         ASSERT_EQ(testDataOsm.str(), osm0.str());
@@ -162,6 +205,10 @@ namespace {
         ASSERT_EQ(testDataOsm.str(), osm2.str());
     }
 
+    // clone
+    TEST_F(BinarySearchTreeTest, cloneTest) {
+
+    }
 ////////////////////////////////////////////////////////////////////////////////
 
 } // namespace
