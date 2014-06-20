@@ -1,9 +1,18 @@
 # 算法复习
+><strong>DNA decides what we are, but not who we are. What weare are never changed, but who we are never stop changing.  
+>- 2 Broke Girls</strong>
+<pre><code>
+   __  _             _  _                            
+   \ \(_)_ __   __ _| || |  ___  _____   _____ _ __  
+    \ \ | '_ \ / _` | || |_/ __|/ _ \ \ / / _ \ '_ \ 
+ /\_/ / | | | | (_| |__   _\__ \  __/\ V /  __/ | | |
+ \___/|_|_| |_|\__, |  |_| |___/\___| \_/ \___|_| |_|
+               |___/                                 
+</code></pre>
 
-创建这个Repository，是为了让最近复习的算法知识能够印象更加深刻。
-代码全部用C/C++实现， 至少一种实现方法。
+创建这个Repository，是为了让最近复习的算法知识能够印象更加深刻。代码全部用C/C++实现， 至少一种实现方法。
 
-关于`UNIT TEST`， 基于[googletest](https://code.google.com/p/googletest/)实现。
+每种算法/模型都有相应的`UNIT TEST`,都基于[googletest](https://code.google.com/p/googletest/)实现。
 
 ## 大纲
 
