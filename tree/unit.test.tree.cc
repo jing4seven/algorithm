@@ -268,10 +268,35 @@ namespace {
     }
 
     // rbtree insert test
-    // todo
+    TEST_F(BinarySearchTreeTest, RBTreeInsertTest) {
+        printPretty(t3_->root, 4, 0, cout);
+
+        t3_->insert(22);
+        //printPretty(t3_->root, 4, 0, cout);
+        ASSERT_EQ(2, t3_->getBlackHeight());
+
+        t3_->insert(1);
+        t3_->insert(6);
+        t3_->insert(11);
+        t3_->insert(16);
+        t3_->insert(21);
+        t3_->insert(23);
+        t3_->insert(26);
+        t3_->insert(29);
+
+        t3_->insert(1);
+
+        printPretty(t3_->root, 4, 0, cout);
+        t3_->insert(4);
+
+        printPretty(t3_->root, 3, 0, cout);
+        ASSERT_EQ(2, t3_->getBlackHeight());
+    }
 
     // rbtree remove test
-    // todo
+    TEST_F(BinarySearchTreeTest, RBTreeRemoveTest) {
+        //printPretty(t3_->root, 4, 0, cout);
+    }
 ////////////////////////////////////////////////////////////////////////////////
 
 } // namespace

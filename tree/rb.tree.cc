@@ -49,6 +49,11 @@ RBTree::isEmpty() const {
 }
 
 void
+RBTree::traversalWithColor(ostringstream & out) const {
+    traversalWithColor((const RBNode *&)root, out);
+}
+
+void
 RBTree::traversal(ostringstream & out) const {
     traversal((const RBNode *&)root, out);
 }
@@ -61,6 +66,11 @@ RBTree::insert(int d) {
 void
 RBTree::remove(int d) {
     remove(root, d);
+}
+
+int
+RBTree::getBlackHeight() {
+    getBlackHeight((const RBNode *&)root);
 }
 
 RBTree &
@@ -187,6 +197,20 @@ RBTree::remove(RBNode * &node, int d) {
    }
 }
 
+int
+RBTree::getBlackHeight(const RBNode * &node) const {
+    if (node == NIL) {
+        return 0;
+    }
+
+    int lH(0), rH(0);
+    lH = getBlackHeight((const RBNode *&)node->left);
+    rH = getBlackHeight((const RBNode *&)node->right);
+    lH = lH>rH ? lH : rH;
+
+    return node->color == BLACK_COLOR ? lH + 1 : lH;
+}
+
 void
 RBTree::makeEmpty(RBNode * &node) {
     if (node!=NULL) {
@@ -300,19 +324,23 @@ RBTree::insertFixup(RBNode *&node) {
 
             // case 1
             if (uNode != NIL && uNode->color == RED_COLOR) {
+                    cout << "yes1" << endl;
                 pNode->color         = BLACK_COLOR;
                 pNode->parent->color = RED_COLOR;
                 uNode->color         = BLACK_COLOR;
             } else if (uNode == NIL || uNode->color == BLACK_COLOR) {
                 if (node->parent->left == node) {
                     // case 2
+                    cout << "yes2" << endl;
                     pNode->color  = BLACK_COLOR;
                     pNode->parent = RED_COLOR;
                     rightRotate(pNode);
                 } else {
                     // case 3
+                    cout << "yes3" << endl;
+                    cNode = pNode;
                     leftRotate(pNode);
-                    insertFixup(pNode);
+                    insertFixup(cNode);
                 }
             }
         }
@@ -494,7 +522,7 @@ int main(void) {
     ostringstream os1, os2;
     tree->traversalWithColor(os1);
 
-    printPretty(tree->root, 1, 0, cout);
+    printPretty(tree->root, 4, 0, cout);
 
     cout << os1.str() << endl;
 
@@ -503,7 +531,7 @@ int main(void) {
 
     cout << os2.str() << endl;
 
-    printPretty(tree->root, 1, 0, cout);
+    printPretty(tree->root, 4, 0, cout);
 
     return 0;
 }*/

@@ -21,6 +21,7 @@
 #define RED_COLOR   0
 #define BLACK_COLOR 1
 #define NIL         NULL
+#define COLORSTR(color) (color == 1 ? "B" : "R")
 
 using namespace std;
 
@@ -37,6 +38,11 @@ public:
             RBNode * p, int c): BinaryNode(d, l, r),
             parent(p), color(c) {}
 
+    string getNodeStr() {
+        os.str("");
+        os << elm << "(" << COLORSTR(color) << ")";
+        return os.str();
+    }
 };
 
 class RBTree {
@@ -51,10 +57,13 @@ public:
     bool contains(const int data) const;
     bool isEmpty() const;
     void makeEmpty();
+    void traversalWithColor(ostringstream & out) const;
     void traversal(ostringstream & out) const;
 
     void insert(const int data);
     void remove(const int data);
+
+    int getBlackHeight();
 
     RBTree & operator=(const RBTree & tree);
 
@@ -68,6 +77,8 @@ private:
 
     void insert(RBNode * &node, RBNode * pnode, const int d);
     void remove(RBNode * &node, const int d);
+
+    int getBlackHeight(const RBNode * &node) const;
 
     void makeEmpty(RBNode * &node);
     void traversal(const RBNode * &node, ostringstream & out) const;

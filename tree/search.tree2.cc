@@ -266,51 +266,51 @@ BinarySearchTree2::transplant(SecuBinaryNode * &node1,
 /*
 int main() {
     BinarySearchTree2 * tree = new BinarySearchTree2();
-    tree->insert(30);
-    tree->insert(20);
-    tree->insert(40);
-    tree->insert(10);
-    tree->insert(25);
-    tree->insert(35);
-    tree->insert(50);
-    tree->insert(5);
-    tree->insert(15);
-    tree->insert(28);
-    tree->insert(41);
+    tree->insert(1130);
+    tree->insert(1120);
+    tree->insert(1140);
+    tree->insert(1110);
+    tree->insert(1125);
+    tree->insert(1135);
+    tree->insert(1150);
+    tree->insert(1115);
+    tree->insert(1115);
+    tree->insert(1128);
+    tree->insert(1141);
 
     cout << "Print tree:"<<endl;
     //tree->printfTree(cout);
-    printPretty(tree->root, 1, 0, cout);
+    printPretty(tree->root, 4, 0, cout);
 
-    tree->remove(115);
+    //tree->remove(115);
 
-    tree->remove(30);
-    printPretty(tree->root, 1, 0, cout);
-    tree->remove(20);
-    printPretty(tree->root, 1, 0, cout);
-    tree->remove(5);
-    printPretty(tree->root, 1, 0, cout);
-    tree->remove(10);
-    printPretty(tree->root, 1, 0, cout);
-    tree->remove(50);
-    printPretty(tree->root, 1, 0, cout);
-    tree->remove(41);
-    printPretty(tree->root, 1, 0, cout);
-    tree->remove(40);
-    printPretty(tree->root, 1, 0, cout);
-    tree->remove(28);
-    printPretty(tree->root, 1, 0, cout);
-    tree->remove(25);
-    printPretty(tree->root, 1, 0, cout);
-    tree->remove(35);
-    printPretty(tree->root, 1, 0, cout);
-    tree->remove(15);
-    printPretty(tree->root, 1, 0, cout);
+    tree->remove(1130);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(1120);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(1115);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(1110);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(1150);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(1141);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(1140);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(1128);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(1125);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(1135);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(1115);
+    printPretty(tree->root, 4, 0, cout);
 
 
     cout << "After remove root item:" <<endl;
     //tree->printfTree(cout);
-    printPretty(tree->root, 1, 0, cout);
+    printPretty(tree->root, 4, 0, cout);
 
     tree->makeEmpty();
 
