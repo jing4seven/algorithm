@@ -72,7 +72,7 @@ private:
     int getColor(const RBNode *&node) const;
 
     void insertFixup(RBNode *&node);
-    void removeFixup(RBNode *&node);
+    void removeFixup(RBNode *&node, RBNode *&pNode);
     void leftRotate(RBNode * &node);
     void rightRotate(RBNode * &node);
     void rightLeftRotate(RBNode * &node);

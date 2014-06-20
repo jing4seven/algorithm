@@ -148,12 +148,6 @@ BinarySearchTree2::remove(SecuBinaryNode * &node, int d) {
             //node->right= dNode->right;
         // 只有一个子节点存在时
         // 直接用字节点替换即可
-
-            if (node->left)
-                ((SecuBinaryNode *)node->left)->parent = tmpNode;
-
-            if (node->right)
-                ((SecuBinaryNode *)node->right)->parent = tmpNode;
         } else {
             if (node->left!=NULL)
                 tmpNode = (SecuBinaryNode *)node->left;
@@ -167,6 +161,11 @@ BinarySearchTree2::remove(SecuBinaryNode * &node, int d) {
             tmpNode->right= node->right;
         }a*/
 
+        if (node->left)
+            ((SecuBinaryNode *)node->left)->parent = tmpNode;
+
+        if (node->right)
+            ((SecuBinaryNode *)node->right)->parent = tmpNode;
 
         transplant(node, tmpNode);
 

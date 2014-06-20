@@ -110,14 +110,14 @@ RBTree::contains(const RBNode * &node,  const int data) const {
 void
 RBTree::insert(RBNode * &node, RBNode * pNode, int d) {
     if (node == NIL) {
-        return;
+        node = new RBNode(d, NIL, NIL, pNode);
+        insertFixup(node);
     } else if (d< node->elm){
         insert((RBNode *&)node->left, node, d);
     } else if (d> node->elm) {
         insert((RBNode *&)node->right, node, d);
     } else {
-        node = new RBNode(d, NIL, NIL, pNode);
-        insertFixup(node);
+        return;
     }
 }
 
@@ -131,50 +131,58 @@ RBTree::remove(RBNode * &node, int d) {
        remove((RBNode *&)node->right, d);
    } else {
         int originalColor = node->color;
-        RBNode * dNode = node,  // 将被删除的节点
-               * tmpNode,       // 临时节点，用于替换
-               * xNode;         // 可能打破平衡的节点
+        RBNode  * dNode = node,     // 将被删除的节点
+                * tmpNode,          // 临时节点，用于替换
+                * xNode,            // 可能打破平衡的节点
+                * pNode;            //
         if (node->left != NIL && node->right != NIL) {
             tmpNode = findMin((RBNode *)node->right);
+            pNode = tmpNode;
 
             originalColor = tmpNode->color;
             xNode = (RBNode *)tmpNode->right;
 
-            if (node->right != tmpNode) {
+            if (node->right == tmpNode) {
+                tmpNode->left = node->left;
+            } else {
                 if (tmpNode->parent->left == tmpNode) {
                     tmpNode->parent->left = tmpNode->right;
                 } else {
                     tmpNode->parent->right = tmpNode->right;
                 }
+
+                tmpNode->left  = node->left;
+                tmpNode->right = node->right;
             }
 
+            pNode = tmpNode;
         } else {
-            if (node->left != NIL) {
-                tmpNode = (RBNode *)node->left;
-            } else {
+            pNode = node->parent;
+            if (node->left == NIL) {
                 tmpNode = (RBNode *)node->right;
+            } else {
+                tmpNode = (RBNode *)node->left;
             }
             xNode = tmpNode;
         }
 
+
         if (node->left != NIL) {
             ((RBNode *)node->left)->parent  = tmpNode;
-            tmpNode->left  = node->left;
         }
 
         if (node->right != NIL) {
             ((RBNode *)node->right)->parent = tmpNode;
-            tmpNode->right = node->right;
         }
 
-        transplant(node, xNode);
+        transplant(node, tmpNode);
 
         delete dNode;
         dNode = NULL;
 
         // 只有删除的是黑色节点时，才修复
         if (originalColor == BLACK_COLOR) {
-            removeFixup(tmpNode);
+            removeFixup(tmpNode, pNode);
         }
    }
 }
@@ -246,7 +254,8 @@ RBTree::transplant(RBNode *&node1, RBNode *&node2){
         node2->parent = tmpNode->parent;
 
     // 为了方便修复，这里让node2保持和node1一样额着色
-    node2->color = node1->color;
+    if (node2 != NIL)
+        node2->color = node1->color;
 }
 
 int
@@ -294,28 +303,28 @@ RBTree::insertFixup(RBNode *&node) {
 }
 
 void
-RBTree::removeFixup(RBNode *&node) {
-    while (node!= root && node->color == BLACK_COLOR) {
-        if (node->parent->left == node) {
-            RBNode * bNode = (RBNode *)node->parent->right;
+RBTree::removeFixup(RBNode *&node, RBNode *&pNode) {
+    while (node!= root && (node==NIL || node->color == BLACK_COLOR)) {
+        if (pNode->left == node) {
+            RBNode * bNode = (RBNode *)pNode->right;
 
             // case 1: bNode->color 是红色
             if (bNode != NIL && bNode->color == RED_COLOR) {
-                node->parent->color = RED_COLOR;
-                bNode->color        = BLACK_COLOR;
-                leftRotate(node->parent);
+                pNode->color = RED_COLOR;
+                bNode->color = BLACK_COLOR;
+                leftRotate(pNode);
                 // 重置标志
-                bNode = (RBNode *)node->parent->right;
+                bNode = (RBNode *)pNode->right;
             }
 
             // case 2: bNode->color 是黑色，双子节点都是黑色
-            if ((bNode->left == NIL ||
+            if (((RBNode *)bNode->left == NIL ||
                         ((RBNode *)bNode->left)->color == BLACK_COLOR) &&
-                  (bNode->right == NIL ||
+                  ((RBNode *)bNode->right == NIL ||
                         ((RBNode *)bNode->right)->color == BLACK_COLOR)) {
                 bNode->color = RED_COLOR;
                 // 将node移动至其父节点
-                node = node->parent;
+                node = pNode;
             } else if (bNode->right == NIL ||
                     ((RBNode *)bNode->right)->color == BLACK_COLOR) {
             // case 3: bNode->color 是黑色，右子节点是黑色
@@ -324,25 +333,25 @@ RBTree::removeFixup(RBNode *&node) {
                 rightRotate(bNode);
 
                 // 重置标志
-                bNode = (RBNode *)node->parent->right;
+                bNode = (RBNode *)pNode->right;
 
             // case 4: bNode->color 是黑色，左子结点是黑色
-                ((RBNode *)node->parent)->color = BLACK_COLOR;
+                ((RBNode *)pNode)->color = BLACK_COLOR;
                 bNode->color                    = RED_COLOR;
                 ((RBNode *)bNode->right)->color = BLACK_COLOR;
 
-                leftRotate(node->parent);
+                leftRotate(pNode);
             }
         } else {
-            RBNode * bNode = (RBNode *)node->parent->left;
+            RBNode * bNode = (RBNode *)pNode->left;
 
             // case 1: bNode->color 是红色
             if (bNode != NIL && bNode->color == RED_COLOR) {
-                node->parent->color = RED_COLOR;
+                pNode->color = RED_COLOR;
                 bNode->color        = BLACK_COLOR;
-                leftRotate(node->parent);
+                leftRotate(pNode);
                 // 重置标志
-                bNode = (RBNode *)node->parent->left;
+                bNode = (RBNode *)pNode->left;
             }
 
             // case 2: bNode->color 是黑色，双子节点都是黑色
@@ -352,7 +361,7 @@ RBTree::removeFixup(RBNode *&node) {
                         ((RBNode *)bNode->right)->color == BLACK_COLOR)) {
                 bNode->color = RED_COLOR;
                 // 将node移动至其父节点
-                node = node->parent;
+                node = pNode;
             } else if (bNode->left== NIL ||
                     ((RBNode *)bNode->left)->color == BLACK_COLOR) {
             // case 3: bNode->color 是黑色，左子节点是黑色
@@ -361,14 +370,14 @@ RBTree::removeFixup(RBNode *&node) {
                 leftRotate(bNode);
 
                 // 重置标志
-                bNode = (RBNode *)node->parent->left;
+                bNode = (RBNode *)pNode->left;
 
             // case 4: bNode->color 是黑色，左子结点是黑色
-                ((RBNode *)node->parent)->color = BLACK_COLOR;
+                ((RBNode *)pNode)->color = BLACK_COLOR;
                 bNode->color                    = RED_COLOR;
                 ((RBNode *)bNode->left)->color = BLACK_COLOR;
 
-                rightRotate(node->parent);
+                rightRotate(pNode);
             }
         }
     }
@@ -435,4 +444,35 @@ void
 RBTree::leftRightRotate(RBNode * &node){
     leftRotate((RBNode *&)node->left);
     rightRotate(node);
+}
+
+int main(void) {
+    RBTree * tree = new RBTree();
+
+    cout << ( tree->root == NIL ) << endl;
+
+    tree->insert(30);
+    tree->insert(20);
+    tree->insert(40);
+    tree->insert(10);
+    tree->insert(25);
+    tree->insert(35);
+    tree->insert(50);
+    tree->insert(5);
+    tree->insert(15);
+    tree->insert(28);
+    tree->insert(41);
+
+    ostringstream os1, os2;
+    tree->traversal(os1);
+
+    tree->remove(35);
+    tree->traversal(os2);
+
+    cout << os1.str() << endl;
+    cout << os2.str() << endl;
+
+    printPretty(tree->root, 1, 0, cout);
+
+    return 0;
 }
