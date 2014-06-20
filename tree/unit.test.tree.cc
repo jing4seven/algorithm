@@ -190,13 +190,6 @@ namespace {
         t1_->traversal(osm1);
         t1_->traversal(osm2);
 
-        /*sort(testData.begin(), testData.end(), less<int>());
-        vector<int>::const_iterator iter = testData.begin();
-        while (iter != testData.end()) {
-            if (*iter != 30 && *iter != 25)
-                testDataOsm << *iter << ",";
-            ++iter;
-        }*/
         testDataOsm << "";
 
         //printPretty(t0_->root, 1, 0, cout);
@@ -205,9 +198,55 @@ namespace {
         ASSERT_EQ(testDataOsm.str(), osm2.str());
     }
 
+    TEST_F(BinarySearchTreeTest, makeEmptyTest) {
+        ostringstream osm0, osm1, osm2, testDataOsm;
+
+        t0_->makeEmpty();
+        t1_->makeEmpty();
+        t2_->makeEmpty();
+
+        t0_->traversal(osm0);
+        t1_->traversal(osm1);
+        t2_->traversal(osm2);
+
+        testDataOsm << "";
+
+        ASSERT_EQ(testDataOsm.str(), osm0.str());
+        ASSERT_EQ(testDataOsm.str(), osm1.str());
+        ASSERT_EQ(testDataOsm.str(), osm2.str());
+    }
+
     // clone
     TEST_F(BinarySearchTreeTest, cloneTest) {
+        ostringstream osm0, osm1, osm2, testDataOsm;
 
+        BinarySearchTree * _t0  = new BinarySearchTree();
+        BinarySearchTree2 * _t1 = new BinarySearchTree2();
+        AvlTree * _t2           = new AvlTree();
+
+        // 通过等号运算符重载运行clone
+        *_t0 = *t0_;
+        *_t1 = *t1_;
+        *_t2 = *t2_;
+
+        t0_->makeEmpty();
+        t1_->makeEmpty();
+        t2_->makeEmpty();
+
+        _t0->traversal(osm0);
+        _t1->traversal(osm1);
+        _t2->traversal(osm2);
+
+        sort(testData.begin(), testData.end(), less<int>());
+        vector<int>::const_iterator iter = testData.begin();
+        while (iter != testData.end()) {
+            testDataOsm << *iter << ",";
+            ++iter;
+        }
+
+        ASSERT_EQ(testDataOsm.str(), osm0.str());
+        ASSERT_EQ(testDataOsm.str(), osm1.str());
+        ASSERT_EQ(testDataOsm.str(), osm2.str());
     }
 ////////////////////////////////////////////////////////////////////////////////
 

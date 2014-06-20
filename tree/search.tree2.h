@@ -65,7 +65,7 @@ private:
     void makeEmpty(SecuBinaryNode * &node);
     SecuBinaryNode * findNext(const SecuBinaryNode * node);
     void traversal (const SecuBinaryNode * &node, ostringstream & out) const;
-    SecuBinaryNode * clone(const SecuBinaryNode * node) const;
+    SecuBinaryNode * clone(const SecuBinaryNode * &node, SecuBinaryNode * pNode ) const;
 
     void transplant(SecuBinaryNode * &a, SecuBinaryNode * &b);
 };

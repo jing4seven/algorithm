@@ -61,7 +61,7 @@ BinarySearchTree2 &
 BinarySearchTree2::operator=(const BinarySearchTree2 & tree) {
     if (this != &tree) {
         makeEmpty();
-        root = clone(tree.root);
+        root = clone((const SecuBinaryNode * &)tree.root, NULL);
     }
     return *this;
 }
@@ -229,12 +229,15 @@ BinarySearchTree2::traversal (const SecuBinaryNode * &node, ostringstream & out)
 }
 
 SecuBinaryNode *
-BinarySearchTree2::clone(const SecuBinaryNode * node) const {
-    SecuBinaryNode * temp = new SecuBinaryNode(node->elm, NULL, NULL, NULL);
+BinarySearchTree2::clone(const SecuBinaryNode * &node, SecuBinaryNode * pNode)
+    const {
+    SecuBinaryNode * temp = new SecuBinaryNode(node->elm, NULL, NULL, pNode);
+
     if (node->left != NULL)
-        temp->left = clone((SecuBinaryNode *)node->left);
-    else if (node->right != NULL)
-        temp->right = clone((SecuBinaryNode *)node->right);
+        temp->left  = clone((const SecuBinaryNode *&)node->left, temp);
+
+    if (node->right != NULL)
+        temp->right = clone((const SecuBinaryNode *&)node->right, temp);
 
     return temp;
 }
@@ -243,7 +246,8 @@ BinarySearchTree2::clone(const SecuBinaryNode * node) const {
 // 对于双子节点，再替换完成后最后的地方取处理
 // 如果放在此方法中处理，可能会在删除时造成死循环
 void
-BinarySearchTree2::transplant(SecuBinaryNode * &node1, SecuBinaryNode * &node2) {
+BinarySearchTree2::transplant(SecuBinaryNode * &node1,
+        SecuBinaryNode * &node2) {
     if (node1 == node2)
         return;
 
