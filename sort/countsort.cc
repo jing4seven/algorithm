@@ -11,24 +11,11 @@
  */
 #include <iostream>
 #include <vector>
-#include <time.h>
-#include <assert.h>
-
-#define random(x) (rand()%(x))
+#include "sort.h"
 
 using namespace std;
 
-void printsource(vector<int> &source) {
-    vector<int>::iterator itr = source.begin();
-    while (itr != source.end()) {
-        cout << *itr << "\t";
-        ++itr;
-    }
-
-    cout << "\n";
-}
-
-void countsort(vector<int> &source, int maxvalue) {
+int countsort(vector<int> &source, int maxvalue) {
     // 初始化计数信数组，长度为maxvalue， 并将所有元素置为0
     vector<int> countArr(maxvalue, 0);
     // 临时结果变量，将所有元素置为0
@@ -52,8 +39,9 @@ void countsort(vector<int> &source, int maxvalue) {
     }
 
     source.assign(resultArr.begin(), resultArr.end());
+    return 0;
 }
-
+/*
 int main() {
     vector<int> source, testsource;
     int i, tmp, maxvalue;
@@ -87,9 +75,9 @@ int main() {
     printsource(testsource);
 
     // 测试
-    assert(source == testsource);
+    //assert(source == testsource);
 
     cout << "\n";
 
     return 0;
-}
+}*/

@@ -6,16 +6,7 @@
  */
 #include <iostream>
 #include <vector>
-#include <time.h>
-#include <assert.h>
-
-#define random(x) (rand()%(x))
-
-#define parent(x) ((x)/2)
-#define left(x) ((x)*2)
-#define right(x) ((x)*2+1)
-
-#define sourcevalue(x) (source[x-1])
+#include "sort.h"
 
 using namespace std;
 
@@ -64,7 +55,7 @@ void buildheap(vector<int> &source) {
     }
 }
 
-void heapsort(vector<int> &source) {
+int heapsort(vector<int> &source) {
     vector<int>::size_type maxlen = source.size();
 
     // 讲零散的数组转化为最大堆
@@ -77,8 +68,10 @@ void heapsort(vector<int> &source) {
         --maxlen;
         maxheapfy(source, 1, maxlen);
     }
-}
 
+    return 0;
+}
+/*
 int main() {
     vector<int> source, testsource;
     int i = 0;
@@ -112,4 +105,4 @@ int main() {
     cout << "\n";
 
     return 0;
-}
+}*/

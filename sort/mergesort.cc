@@ -4,22 +4,9 @@
  */
 #include <iostream>
 #include <vector>
-#include <time.h>
-#include <assert.h>
-
-#define random(x) (rand()%(x))
+#include "sort.h"
 
 using namespace std;
-
-void printsource(vector<int> &source) {
-    vector<int>::iterator itr = source.begin();
-    while (itr != source.end()) {
-        cout << *itr << "\t";
-        ++itr;
-    }
-
-    cout << "\n";
-}
 
 void merge(vector<int> &source, int start, int pos, int end) {
     // 必须要有一个额外的空间
@@ -70,7 +57,7 @@ int msort(vector<int> &source, int start, int end) {
 
     return 0;
 }
-
+/*
 int main() {
     vector<int> source, testsource;
     int i = 0;
@@ -104,4 +91,4 @@ int main() {
     cout << "\n";
 
     return 0;
-}
+} */

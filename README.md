@@ -24,7 +24,7 @@
         * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/radixsort.cc)
     * 桶排序
         * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/bucksort.cc)
-    * UNIT TEST
+    * UNIT TEST(https://github.com/jing4seven/algorithm/blob/master/sort/unit.test.sort.cc)
     * [小结](https://github.com/jing4seven/algorithm/blob/master/sort/summary.md)
 2. 散列
     * key为整数的散列
@@ -46,14 +46,19 @@
             * [二次探测(Quadratic probing)]
             * [双重探测(Secondary clustering)]
     * [小结](https://github.com/jing4seven/algorithm/blob/master/hash/summary.md)
-3. 树数据结构        
-    * [树接口的定义](https://github.com/jing4seven/algorithm/blob/master/tree/tree.definition.md)
+3. 树数据结构
+    * 树接口的定义
+        * [C++](https://github.com/jing4seven/algorithm/blob/master/tree/tree.definition.md)
     * 二叉查找树
+        * [C++ 物理删除 header](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree.h)
         * [C++,物理删除](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree.cc)
+        * [C++ 惰性删除 header](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree2.h)
         * [C++,惰性删除](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree2.cc)
     * 二叉平衡树(AVL)
+        * [C++ header](https://github.com/jing4seven/algorithm/blob/master/tree/avl.tree.h)
         * [C++](https://github.com/jing4seven/algorithm/blob/master/tree/avl.tree.cc)
     * 红黑树
+        * [C++ header](https://github.com/jing4seven/algorithm/blob/master/tree/rb.tree.h)
         * [C++](https://github.com/jing4seven/algorithm/blob/master/tree/rb.tree.cc)
     * B树
     * [UNIT TEST](https://github.com/jing4seven/algorithm/blob/master/tree/unit.test.tree.cc)
@@ -80,5 +85,3 @@
     * 小结
 8. 资源
     * [googletest](https://github.com/jing4seven/algorithm/blob/master/res/googletest.setup.md)
-
-

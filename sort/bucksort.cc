@@ -4,26 +4,11 @@
  *
  */
 #include <iostream>
-#include <vector>
-#include <list>
-#include <time.h>
-#include <assert.h>
-
-#define random_db() ((double)(rand()/(double)RAND_MAX))
+#include "sort.h"
 
 using namespace std;
 
-void printsource(vector<double> &source) {
-    vector<double>::iterator itr = source.begin();
-    while (itr != source.end()) {
-        cout << *itr << "\t";
-        ++itr;
-    }
-
-    cout << "\n";
-}
-
-void bsort(vector<double> &source, int buckets_size) {
+int bsort(vector<double> &source, int buckets_size) {
     int i, j, k;
     vector<list<double> > buckets(buckets_size);
 
@@ -59,8 +44,10 @@ void bsort(vector<double> &source, int buckets_size) {
             ++l_iter;
         }
     }
-}
 
+    return 0;
+}
+/*
 int main() {
     vector<double> source, testsource;
     int i;
@@ -98,4 +85,4 @@ int main() {
     cout << "\n";
 
     return 0;
-}
+}*/

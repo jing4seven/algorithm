@@ -4,26 +4,13 @@
  */
 #include <iostream>
 #include <vector>
-#include <time.h>
-#include <assert.h>
-
-#define random(x) (rand()%(x))
+#include "sort.h"
 
 using namespace std;
 
-void printsource(vector<int> &source) {
-    vector<int>::iterator itr = source.begin();
-    while (itr != source.end()) {
-        cout << *itr << "\t";
-        ++itr;
-    }
-
-    cout << "\n";
-}
-
-void qsort(vector<int> &source, int start, int end) {
+int qsort1(vector<int> &source, int start, int end) {
     srand((int)time(0));
-    int i,j,t,pos;
+    int i,j,t,pos, result(0);
     i   = start;
     j   = end;
     t   = 0; // 插入操作用到的索引值
@@ -68,15 +55,15 @@ void qsort(vector<int> &source, int start, int end) {
     // pos处的元素在全局的位置已经固定
     // 此时它已经排好，只需要排列其他元素即可
     if (start< pos-1)
-        qsort(source, start, pos-1);
+        result = qsort1(source, start, pos-1);
 
     if (pos<end-1)
-        qsort(source, pos+1, end);
+        result = result + qsort1(source, pos+1, end);
 
-    return;
+    return result;
 }
 
-
+/*
 int main(int argc, char * argv[]) {
     vector<int> source, testsource;
     int i = 0;
@@ -110,4 +97,4 @@ int main(int argc, char * argv[]) {
     cout << "\n";
 
     return 0;
-}
+}*/

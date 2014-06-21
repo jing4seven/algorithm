@@ -5,24 +5,12 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-#include <time.h>
-#include <assert.h>
+#include "sort.h"
 
-#define random_btn(x,y) ((x) + (rand()%((y)-(x))))
 
 using namespace std;
 
-void printsource(const vector<int> &source) {
-    vector<int>::const_iterator itr = source.begin();
-    while (itr != source.end()) {
-        cout << *itr << "\t";
-        ++itr;
-    }
-
-    cout << "\n";
-}
-
-void rsort(vector<int> &source, int maxBit, int base ) {
+int rsort(vector<int> &source, int maxBit, int base ) {
     int tmp, idx, i, k;
     idx = 0; // 基数位索引
     i = 0; // 元素索引
@@ -54,8 +42,9 @@ void rsort(vector<int> &source, int maxBit, int base ) {
 
         ++idx;
     }
+    return 0;
 }
-
+/*
 int main() {
     vector<int> source, testsource;
     int i = 0;
@@ -91,4 +80,4 @@ int main() {
     cout << "\n";
 
     return 0;
-}
+}*/

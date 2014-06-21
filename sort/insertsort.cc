@@ -1,26 +1,14 @@
 /*
  * 插入排序
  */
+
 #include <iostream>
 #include <vector>
-#include <time.h>
-#include <assert.h>
-
-#define random(x) (rand()%(x))
+#include "sort.h"
 
 using namespace std;
 
-void printsource(vector<int> &source) {
-    vector<int>::iterator itr = source.begin();
-    while (itr != source.end()) {
-        cout << *itr << "\t";
-        ++itr;
-    }
-
-    cout << "\n";
-}
-
-void isort(vector<int> &source) {
+int isort(vector<int> &source) {
     vector<int>::iterator iiter;
     vector<int>::iterator jiter;
     int tmp;
@@ -41,8 +29,10 @@ void isort(vector<int> &source) {
         }
         ++jiter;
     }
-}
 
+    return 0;
+}
+/*
 int main() {
     vector<int> source, testsource;
     int i = 0;
@@ -75,4 +65,4 @@ int main() {
 
     return 0;
 
-}
+}*/

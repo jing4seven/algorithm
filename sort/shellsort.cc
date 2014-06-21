@@ -3,30 +3,16 @@
  */
 #include <iostream>
 #include <vector>
-#include <time.h>
-#include <assert.h>
-
-#define random(x) (rand()%(x))
+#include "sort.h"
 
 using namespace std;
 
-void printsource(vector<int> const  &source) {
-    vector<int>::const_iterator itr = source.begin();
-    while (itr != source.end()) {
-        cout << *itr << "\t";
-        ++itr;
-    }
-
-    cout << "\n";
-}
-
-void shellsort(vector<int> &source) {
+int shellsort(vector<int> &source) {
     int i, j, k;
     int tmp;
 
     // 递减的的希尔序列是n/2, n/4 .... 1
     for (i=source.size()/2; i>=1; i/=2) {
-        cout << i << endl;
         for (j=i; j<source.size(); ++j) {
             // 保留当前元素的值
             tmp = source[j];
@@ -47,10 +33,11 @@ void shellsort(vector<int> &source) {
                 /*swap(source[k], source[k-i]);*/
         }
 
-        printsource(source);
+        //printsource(source);
     }
+    return 0;
 }
-
+/*
 int main() {
     vector<int> source, testsource;
     int i = 0;
@@ -85,4 +72,4 @@ int main() {
 
 
     return 0;
-}
+}*/

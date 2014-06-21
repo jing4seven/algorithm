@@ -4,22 +4,9 @@
 
 #include <iostream>
 #include <vector>
-#include <time.h>
-#include <assert.h>
-
-#define random(x) (rand()%(x))
+#include "sort.h"
 
 using namespace std;
-
-void printsource(vector<int> &source) {
-    vector<int>::iterator itr = source.begin();
-    while (itr != source.end()) {
-        cout << *itr << "\t";
-        ++itr;
-    }
-
-    cout << "\n";
-}
 
 // 分割函数
 int partition(vector<int> &source, int start, int end) {
@@ -47,20 +34,20 @@ int partition(vector<int> &source, int start, int end) {
     return pos;
 }
 
-void qsort(vector<int> &source, int start, int end) {
-    int pos;
+int qsort2(vector<int> &source, int start, int end) {
+    int pos, result(0);
 
     pos = partition(source, start, end);
 
     if (pos-1 >start)
-        qsort(source, start, pos-1);
+        result = qsort2(source, start, pos-1);
 
     if (end>pos+1)
-        qsort(source, pos+1, end);
+        result = result + qsort2(source, pos+1, end);
 
-    return;
+    return result;
 }
-
+/*
 int main () {
     vector<int> source, testsource;
     vector<int>::iterator iter;
@@ -92,4 +79,4 @@ int main () {
 
     printsource(source);
 
-}
+}*/
