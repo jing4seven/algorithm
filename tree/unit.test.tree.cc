@@ -272,10 +272,6 @@ namespace {
         printPretty(t3_->root, 4, 0, cout);
 
         t3_->insert(22);
-        //printPretty(t3_->root, 4, 0, cout);
-        ASSERT_EQ(2, t3_->getBlackHeight());
-
-        t3_->insert(1);
         t3_->insert(6);
         t3_->insert(11);
         t3_->insert(16);
@@ -283,19 +279,43 @@ namespace {
         t3_->insert(23);
         t3_->insert(26);
         t3_->insert(29);
-
         t3_->insert(1);
 
-        printPretty(t3_->root, 4, 0, cout);
-        t3_->insert(4);
+        vector<RBNode *> vecrb;
+        t3_->preOrder(vecrb);
+        vector<RBNode *>::const_iterator iter = vecrb.begion();
 
-        printPretty(t3_->root, 3, 0, cout);
-        ASSERT_EQ(2, t3_->getBlackHeight());
+        //printPretty(t3_->root, 3, 0, cout);
+
+        // 红黑树特征测试
+        // 特征1. 每个节点，不是红色就使黑色；
+        iter  = vecrb.begion();
+        while (iter != vecrb.end()) {
+            //ASSERT_EQ(BLACK_COLOR, (RBNode *)(*iter)->color);
+            ++iter;
+        }
+
+        // 特征2：根节点是黑色
+        ASSERT_EQ(BLACK_COLOR, t3_->color)；
+
+        // 特征3：每个叶节点（NIL）都是黑色的；
+        iter  = vecrb.begion();
+        while (iter != vecrb.end()) {
+            if ((*iter)->left == NULL && (*iter)->right == NULL) {
+                ASSERT_EQ(BLACK_COLOR, (RBNode *)(*iter)->color);
+            }
+            ++iter;
+        }
+
+        // 特征4：如果一个节点是红的，那么它的两个子节点都使黑色的；
+
+        // 特征5：对于每个节点，从该节点到其后代节点的简单路径，均含有相同数目黑
+        // 色节点；
+
     }
 
     // rbtree remove test
     TEST_F(BinarySearchTreeTest, RBTreeRemoveTest) {
-        //printPretty(t3_->root, 4, 0, cout);
     }
 ////////////////////////////////////////////////////////////////////////////////
 

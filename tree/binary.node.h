@@ -3,6 +3,8 @@
 
 #include <sstream>
 #include <string>
+#include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -19,6 +21,28 @@ public:
         os.str("");
         os << elm;
         return os.str();
+    }
+
+    virtual preOrder(vecotr<BinaryNode *> & vc) const {
+        BinaryNode * node = root;
+        stack<BinaryNode *> stack;
+
+        while (node != NULL && !stack.empty()) {
+            BinaryNode * tmpNode = node;
+
+            while (node != NULL) {
+                stack.push(node);
+                node=node->left;
+            }
+
+            if (!stack.empty()) {
+                node= stack.top();
+
+                vc.push_back(node);
+                stack.pop();
+                node = node->right;
+            }
+        }
     }
 
 protected:

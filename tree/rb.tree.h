@@ -18,9 +18,9 @@
 #include <sstream>
 #include "binary.node.h"
 
-#define RED_COLOR   0
-#define BLACK_COLOR 1
-#define NIL         NULL
+#define RED_COLOR       0
+#define BLACK_COLOR     1
+#define NIL             NULL
 #define COLORSTR(color) (color == 1 ? "B" : "R")
 
 using namespace std;

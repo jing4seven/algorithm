@@ -324,20 +324,20 @@ RBTree::insertFixup(RBNode *&node) {
 
             // case 1
             if (uNode != NIL && uNode->color == RED_COLOR) {
-                    cout << "yes1" << endl;
                 pNode->color         = BLACK_COLOR;
                 pNode->parent->color = RED_COLOR;
                 uNode->color         = BLACK_COLOR;
+                // pNode的父节点现在是红色的，它下面的子树已经平衡了
+                // 现在需要递归去平衡它上面的节点
+                insertFixup(pNode->parent);
             } else if (uNode == NIL || uNode->color == BLACK_COLOR) {
                 if (node->parent->left == node) {
                     // case 2
-                    cout << "yes2" << endl;
                     pNode->color  = BLACK_COLOR;
                     pNode->parent = RED_COLOR;
                     rightRotate(pNode);
                 } else {
                     // case 3
-                    cout << "yes3" << endl;
                     cNode = pNode;
                     leftRotate(pNode);
                     insertFixup(cNode);
