@@ -349,17 +349,29 @@ namespace {
     TEST_F(BinarySearchTreeTest, RBTreeRemoveTest) {
         //printPretty(t3_->root, 4, 0, cout);
 
+        printPretty(t3_->root, 4, 0, cout);
         t3_->remove(30);
+        printPretty(t3_->root, 4, 0, cout);
         t3_->remove(20);
-        t3_->remove(40);
-        t3_->remove(10);
- /*       t3_->remove(25);*/
+        printPretty(t3_->root, 4, 0, cout);
+/*        t3_->remove(40);*/
+        //printPretty(t3_->root, 4, 0, cout);
+        //t3_->remove(10);
+        //printPretty(t3_->root, 4, 0, cout);
+        //t3_->remove(25);
+        //printPretty(t3_->root, 4, 0, cout);
         //t3_->remove(35);
+        //printPretty(t3_->root, 4, 0, cout);
         //t3_->remove(50);
+        //printPretty(t3_->root, 4, 0, cout);
         //t3_->remove(5);
+        //printPretty(t3_->root, 4, 0, cout);
         //t3_->remove(15);
-        /*t3_->remove(28);*/
+        //printPretty(t3_->root, 4, 0, cout);
+        //t3_->remove(28);
+        //printPretty(t3_->root, 4, 0, cout);
         //t3_->remove(41);
+        /*printPretty(t3_->root, 4, 0, cout);*/
 /*
         vector<RBNode *> vecrb;
         t3_->preOrder(vecrb);
@@ -422,7 +434,7 @@ namespace {
             ASSERT_TRUE(lbn == rbn);
 
             ++iter;
-        }*/
+        } */
     }
 ////////////////////////////////////////////////////////////////////////////////
 
