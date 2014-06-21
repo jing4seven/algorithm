@@ -1,15 +1,4 @@
 # 算法复习
-><strong>DNA decides what we are, but not who we are. What weare are never changed, but who we are never stop changing.  
->- 2 Broke Girls</strong>
-
-<pre><code>
-   __  _             _  _                            
-   \ \(_)_ __   __ _| || |  ___  _____   _____ _ __  
-    \ \ | '_ \ / _` | || |_/ __|/ _ \ \ / / _ \ '_ \ 
- /\_/ / | | | | (_| |__   _\__ \  __/\ V /  __/ | | |
- \___/|_|_| |_|\__, |  |_| |___/\___| \_/ \___|_| |_|
-               |___/                                 
-</code></pre>
 
 创建这个Repository，是为了让最近复习的算法知识能够印象更加深刻。代码全部用C/C++实现， 至少一种实现方法。
 
@@ -65,9 +54,10 @@
     * 二叉平衡树(AVL)
         * [C++](https://github.com/jing4seven/algorithm/blob/master/tree/avl.tree.cc)
     * 红黑树
+        * [C++](https://github.com/jing4seven/algorithm/blob/master/tree/rb.tree.cc)
     * B树
     * [UNIT TEST](https://github.com/jing4seven/algorithm/blob/master/tree/unit.test.tree.cc)
-    * 小结
+    * [小结](https://github.com/jing4seven/algorithm/blob/master/tree/summary.md)
 4. 搜索
     * 二分搜索
     * 广度优先搜索

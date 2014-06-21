@@ -254,7 +254,7 @@ RBTree::traversalWithColor(const RBNode *& node, ostringstream & out) const {
         return;
 
     if (node->left) {
-        traversal((const RBNode *&)node->left, out);
+        traversalWithColor((const RBNode *&)node->left, out);
     }
 
     if (node) {
@@ -262,7 +262,7 @@ RBTree::traversalWithColor(const RBNode *& node, ostringstream & out) const {
     }
 
     if (node->right) {
-        traversal((const RBNode *&)node->right, out);
+        traversalWithColor((const RBNode *&)node->right, out);
     }
 }
 
@@ -336,7 +336,7 @@ RBTree::getColor(const RBNode * &node) const {
 
 void
 RBTree::insertFixup(RBNode *&node) {
-    while (node->parent && node->parent->color == RED_COLOR) {
+    while (node->parent && ((RBNode *)node->parent)->color == RED_COLOR) {
         RBNode * cNode = node;
         RBNode * pNode = node->parent;
         RBNode * uNode;
@@ -344,29 +344,47 @@ RBTree::insertFixup(RBNode *&node) {
         if (pNode->parent!= NIL) {
             if (pNode->parent->left == pNode) {
                 uNode = (RBNode *)pNode->parent->right;
+                // case 1
+                if (uNode != NIL && uNode->color == RED_COLOR) {
+                    pNode->color         = BLACK_COLOR;
+                    pNode->parent->color = RED_COLOR;
+                    uNode->color         = BLACK_COLOR;
+                    // pNode的父节点现在是红色的，它下面的子树已经平衡了
+                    // 现在需要递归去平衡它上面的节点
+                    insertFixup(pNode->parent);
+                } else if (uNode == NIL || uNode->color == BLACK_COLOR) {
+                    if (node->parent->left == node) {
+                        // case 2
+                        pNode->color  = BLACK_COLOR;
+                        pNode->parent->color = RED_COLOR;
+                        rightRotate(pNode->parent);
+                    } else {
+                        // case 3
+                        leftRotate(pNode);
+                        insertFixup(pNode);
+                    }
+                }
             } else {
                 uNode = (RBNode *)pNode->parent->left;
-            }
-
-            // case 1
-            if (uNode != NIL && uNode->color == RED_COLOR) {
-                pNode->color         = BLACK_COLOR;
-                pNode->parent->color = RED_COLOR;
-                uNode->color         = BLACK_COLOR;
-                // pNode的父节点现在是红色的，它下面的子树已经平衡了
-                // 现在需要递归去平衡它上面的节点
-                insertFixup(pNode->parent);
-            } else if (uNode == NIL || uNode->color == BLACK_COLOR) {
-                if (node->parent->left == node) {
-                    // case 2
-                    pNode->color  = BLACK_COLOR;
-                    pNode->parent = RED_COLOR;
-                    rightRotate(pNode);
-                } else {
-                    // case 3
-                    cNode = pNode;
-                    leftRotate(pNode);
-                    insertFixup(cNode);
+                // case 1
+                if (uNode != NIL && uNode->color == RED_COLOR) {
+                    pNode->color         = BLACK_COLOR;
+                    pNode->parent->color = RED_COLOR;
+                    uNode->color         = BLACK_COLOR;
+                    // pNode的父节点现在是红色的，它下面的子树已经平衡了
+                    // 现在需要递归去平衡它上面的节点
+                    insertFixup(pNode->parent);
+                } else if (uNode == NIL || uNode->color == BLACK_COLOR) {
+                    if (node->parent->right== node) {
+                        // case 2
+                        pNode->color  = BLACK_COLOR;
+                        pNode->parent->color = RED_COLOR;
+                        leftRotate(pNode->parent);
+                    } else {
+                        // case 3
+                        rightRotate(pNode);
+                        insertFixup(pNode);
+                    }
                 }
             }
         }
@@ -579,11 +597,10 @@ RBTree::leftRightRotate(RBNode * &node){
     leftRotate((RBNode *&)node->left);
     rightRotate(node);
 }
+
 /*
 int main(void) {
     RBTree * tree = new RBTree();
-
-    cout << ( tree->root == NIL ) << endl;
 
     // 组建一棵树：
     tree->root                      = new RBNode(3, NULL, NULL,
@@ -628,6 +645,29 @@ int main(void) {
 
     cout << os2.str() << endl;
 
+    printPretty(tree->root, 4, 0, cout);
+
+    tree->insert(30);
+    printPretty(tree->root, 4, 0, cout);
+    tree->insert(20);
+    printPretty(tree->root, 4, 0, cout);
+    tree->insert(40);
+    printPretty(tree->root, 4, 0, cout);
+    tree->insert(10);
+    printPretty(tree->root, 4, 0, cout);
+    tree->insert(25);
+    printPretty(tree->root, 4, 0, cout);
+    tree->insert(35);
+    printPretty(tree->root, 4, 0, cout);
+    tree->insert(50);
+    printPretty(tree->root, 4, 0, cout);
+    tree->insert(5);
+    printPretty(tree->root, 4, 0, cout);
+    tree->insert(15);
+    printPretty(tree->root, 4, 0, cout);
+    tree->insert(28);
+    printPretty(tree->root, 4, 0, cout);
+    tree->insert(41);
     printPretty(tree->root, 4, 0, cout);
 
     return 0;

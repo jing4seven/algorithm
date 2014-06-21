@@ -328,7 +328,6 @@ namespace {
         while (iter != vecrb.end()) {
             cln = (const RBNode *)((RBNode *)(*iter)->left);
             crn = (const RBNode *)((RBNode *)(*iter)->right);
-
             if (cln != NULL)
                 lbn = t3_->getBlackHeight(cln);
             else
@@ -379,6 +378,27 @@ namespace {
         //printPretty(t3_->root, 4, 0, cout);
         t3_->remove(28);
         //cout << "After remove 28" << endl;
+        //printPretty(t3_->root, 4, 0, cout);
+
+        t3_->insert(30);
+        //printPretty(t3_->root, 4, 0, cout);
+        t3_->insert(20);
+        //printPretty(t3_->root, 4, 0, cout);
+        t3_->insert(40);
+        //printPretty(t3_->root, 4, 0, cout);
+        t3_->insert(10);
+        //printPretty(t3_->root, 4, 0, cout);
+        t3_->insert(25);
+        //printPretty(t3_->root, 4, 0, cout);
+        t3_->insert(35);
+        //printPretty(t3_->root, 4, 0, cout);
+        t3_->insert(50);
+        //printPretty(t3_->root, 4, 0, cout);
+        t3_->insert(5);
+        //printPretty(t3_->root, 4, 0, cout);
+        t3_->insert(15);
+        //printPretty(t3_->root, 4, 0, cout);
+        t3_->insert(28);
         //printPretty(t3_->root, 4, 0, cout);
 
         vector<RBNode *> vecrb;
