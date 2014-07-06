@@ -45,7 +45,7 @@
             * [双重探测(Secondary clustering)]
     * [小结](https://github.com/jing4seven/algorithm/blob/master/hash/summary.md)
 3. 树数据结构
-    * 树接口的定义(https://github.com/jing4seven/algorithm/blog/master/tree/tree.definition.md)
+    * [树接口的定义](https://github.com/jing4seven/algorithm/blog/master/tree/tree.definition.md)
     * 二叉查找树
         * [C++,通过传值维护变更](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree.cc)
         * [C++,通过替换节点维护变更](https://github.com/jing4seven/algorithm/blob/master/tree/search.tree2.cc)
