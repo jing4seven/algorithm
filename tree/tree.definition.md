@@ -1,4 +1,4 @@
-## 树的定义
+## 树接口的定义
 
 ### 基类
 对于本章节中所有二叉树中节点的定义，都以如下`BinaryNode`类作为基类进行扩展，如Search Binary Tree的node会添加`parent`属性，而AVL Tree的node还会添加height字段等。
