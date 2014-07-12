@@ -38,7 +38,7 @@ public:
     set<GNode<T>*> get_adjacent(const T s) const;
 private:
     GNode<T> * get_vertex(const T data) const;
-    void remove_adjacent(const GNode<T> * cnode, const T adjdata);
+    void remove_adjacent(set<GNode<T>*> & adjacent, const T adjdata);
 };
 
 #endif

@@ -81,32 +81,40 @@ Graph<T>::insert_edge(const T s, const T e) {
 template <typename T>
 void
 Graph<T>::remove_vertex(const T data) {
-    GNode<T> * gnode, adjnode;
+    GNode<T> * gnode, * adjnode;
     gnode = adjnode = NULL;
 
+    typename list<GNode<T>*>::iterator niter = adjacents.begin();
+    while (niter != adjacents.end() ) {
+        gnode = (GNode<T> *)*niter;
+        if (gnode && gnode->data == data) {
+            break;
+        }
+        ++niter;
+    }
     // 抹去当前节点的数据
-    if ((gnode = get_vertex(data)) == NULL) {
+    if (gnode == NULL || *niter == NULL) {
         return;
     }
 
-    set<GNode<T> > * gadjacent = gnode->adjacent;
-
     // 抹去其他节点到被删除节点的边
-    typename list<GNode<T> >::iterator iter = adjacents.begin();
+    typename list<GNode<T>*>::iterator iter = adjacents.begin();
 
     // 遍历邻接表，将所有包含data节点的边都删除
     while (iter != adjacents.end()) {
-        adjnode = (GNode<T> *)iter;
+        //adjnode = (GNode<T> *)*iter;
 
-        if (iter != NULL) {
-            remove_adjacent(adjnode, data);
-            this->vcount--;
+        if (*iter != NULL) {
+            remove_adjacent((*iter)->adjacent, data);
         }
         ++iter;
     }
 
-    delete gadjacent;
-    delete gnode;
+    set<GNode<T>*> gadjacent = gnode->adjacent;
+    gadjacent.clear();
+
+
+    adjacents.erase(niter);
 
     this->ecount--;
 }
@@ -114,6 +122,23 @@ Graph<T>::remove_vertex(const T data) {
 template <typename T>
 void
 Graph<T>::remove_edge(const T s, const T e) {
+    GNode<T> * gnode = get_vertex(s);
+
+    if (gnode == NULL) {
+        return;
+    }
+
+    typename set<GNode<T>*>::iterator iter = NULL;
+
+    if (gnode->adjacent== NULL) {
+        return;
+    }
+
+    iter = gnode->adjacent->find(e);
+
+    if (iter) {
+        gnode->adjacent->erase(iter);
+    }
 
     this->vcount--;
 }
@@ -134,10 +159,10 @@ Graph<T>::get_adjacent(const T data) const {
 template <typename T>
 GNode<T> *
 Graph<T>::get_vertex(const T data) const {
-    typename list<GNode<T> >::iterator iter = adjacents.begin();
+    typename list<GNode<T>*>::const_iterator iter = adjacents.begin();
     GNode<T> * gnode = NULL;
     while (iter != adjacents.end() ) {
-        gnode = (GNode<T> *)iter;
+        gnode = (GNode<T> *)*iter;
         if (gnode && gnode->data == data) {
             return gnode;
         }
@@ -148,23 +173,22 @@ Graph<T>::get_vertex(const T data) const {
 
 template <typename T>
 void
-Graph<T>::remove_adjacent(const GNode<T> * cnode, const T adjdata) {
-    if (cnode == NULL) {
+Graph<T>::remove_adjacent(set<GNode<T>*> &adjacent, const T adjdata) {
+    if (adjacent.size() <=0) {
         return;
     }
 
-    set<GNode<T> > * adj = cnode->adjacent;
-
-    if (adj == NULL) {
-        return;
+    typename set<GNode<T>*>::iterator iter = adjacent.begin();
+    while (iter!=adjacent.end()) {
+        if ((*iter)->data == adjdata) {
+            break;
+        }
+        ++iter;
     }
 
-    typename set<GNode<T> >::iterator iter = NULL;
-
-    iter = adj->find(adjdata);
-
-    if (iter != NULL ) {
-        adj->erase(iter);
+    if (iter!=adjacent.end()) {
+        adjacent.erase(iter);
+        this->ecount--;
     }
 }
 
@@ -199,24 +223,41 @@ int main(void) {
 
     graph->insert_edge("G", "F");
 
-    list<GNode<string>*> adjs = graph->adjacents;
+    //list<GNode<string>*> adjs = graph->adjacents;
 
-    list<GNode<string>*>::const_iterator iter = adjs.begin();
-    set<GNode<string>*>::const_iterator adjiter;
-    set<GNode<string>*> * adjtemp;
+    list<GNode<string>*>::iterator iter = graph->adjacents.begin();
+    set<GNode<string>*>::iterator adjiter;
 
-    while (iter != adjs.end()) {
+    while (iter != graph->adjacents.end()) {
         cout <<  (string)(*iter)->data << endl;
 
-        adjtemp = &(*iter)->adjacent;
-        adjiter = adjtemp->begin();
-        while (adjiter != adjtemp->end()) {
+        adjiter =(&(*iter)->adjacent)->begin();
+        while (adjiter != (&(*iter)->adjacent)->end()) {
             cout << "\t" << (*adjiter)->data << endl;
             ++adjiter;
         }
         ++iter;
     }
 
+    cout << "--------------------" << endl;
+
+    graph->remove_vertex("A");
+    graph->remove_vertex("C");
+
+    iter = graph->adjacents.begin();
+
+    while (iter != graph->adjacents.end()) {
+        cout <<  (string)(*iter)->data << endl;
+
+        adjiter =(&(*iter)->adjacent)->begin();
+        while (adjiter != (&(*iter)->adjacent)->end()) {
+            cout << "\t" << (*adjiter)->data << endl;
+            ++adjiter;
+        }
+        ++iter;
+    }
+
+    cout << "--------------------" << endl;
     return 0;
 }
 
