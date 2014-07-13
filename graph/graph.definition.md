@@ -6,5 +6,39 @@
 
 ### 基类
 
-### 方法
 
+```c++
+template <typename T>
+class GNode {
+public:
+    T data;
+    set<GNode<T>*> adjacent; // 邻接链表
+    GNode(T d): data(d), adjacent(){
+    };
+};
+
+template <typename T>
+class Graph {
+public:
+    int vcount; // Vertex顶点数
+    int ecount; // Edge 边数
+    list<GNode<T>*> adjacents; // 存储节点指针的集合
+
+    Graph(): vcount(0), ecount(0), adjacents() {
+    }
+};
+
+```
+### 方法
+`Graph`的公共方法
+```c++
+    void insert_vertex(GNode<T> * node);
+    void insert_edge(GNode<T> * snode, GNode<T> * enode);
+    void remove_vertex(GNode<T> * node);
+    void remove_edge(GNode<T> * snode, GNode<T> * enode);
+```
+
+`Graph`私有方法
+```c++
+    void remove_adjacent(set<GNode<T>*> &adjacent, GNode<T> * n);
+```

@@ -38,13 +38,7 @@ public:
 
     Graph(): vcount(0), ecount(0), adjacents() {
     }
-    Graph(const list<GNode<T> > adj);
-    /*
-    void insert_vertex(const T data);
-    void insert_edge(const T s, const T e);
-    void remove_vertex(const T data);
-    void remove_edge(const T s, const T e);
-    set<GNode<T>*> get_adjacent(const T s) const;*/
+
     void insert_vertex(GNode<T> * node);
     void insert_edge(GNode<T> * snode, GNode<T> * enode);
     void remove_vertex(GNode<T> * node);

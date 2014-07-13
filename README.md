@@ -81,6 +81,7 @@
         * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/graph.definition.md)
     * 最小生成树
         * Dijkstra 算法
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/dijkstra.mst.cc)
         * Prim 算法
         * Kruskal 算法
     * 单源最短路径

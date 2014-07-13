@@ -1,3 +1,9 @@
+/*******************************************************************************
+ 广度优先搜索
+
+ 特征：
+ 1. 有向无向都可以，有环五环都可以。
+*******************************************************************************/
 #include "../graph/graph.cc"
 #include <stdio.h>
 #include <iostream>
@@ -13,42 +19,42 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-class SampleGNode: public GNode<T> {
+class BfsGNode: public GNode<T> {
 public:
     int color;
     int dist;
-    SampleGNode<T> * parent;
+    BfsGNode<T> * parent;
 
-    SampleGNode(T d): GNode<T>(d), color(COLOR_WHITE), parent(NIL),
+    BfsGNode(T d): GNode<T>(d), color(COLOR_WHITE), parent(NIL),
         dist(INFINITE) { }
 };
 
 template <typename T>
-void bfs(Graph<T> * graph, SampleGNode<T> * gnode) {
+void bfs(Graph<T> * graph, BfsGNode<T> * gnode) {
     if (gnode == NULL || graph == NULL) {
         return;
     }
 
-    deque<SampleGNode<T> *> que;
+    deque<BfsGNode<T> *> que;
     typename set<GNode<T> *>::iterator iter;
     set<GNode<T>*> nodeadj;
     // 所有的节点初始化时，就默认都是白色，所以这里可以省略标白这一步了
     que.push_back(gnode);
 
     while (!que.empty()) {
-        SampleGNode<T> * sgnode;
+        BfsGNode<T> * sgnode;
         // 弹出一个节点, 对其邻接表进行遍历
         sgnode = que.front();
         // 已经选择过的表黑色
         sgnode->color = COLOR_BLACK;
         // 更新distance
         sgnode->dist = sgnode->parent == NIL ? 0: (sgnode->parent->dist+ 1);
-        //cout << sgnode->data << ":" << sgnode->dist << endl;
+        cout << sgnode->data << ":" << sgnode->dist << endl;
         nodeadj = sgnode->adjacent;
         iter = nodeadj.begin();
 
         while (iter != nodeadj.end()) {
-            SampleGNode<T> * ssgnode = (SampleGNode<T> *) *iter;
+            BfsGNode<T> * ssgnode = (BfsGNode<T> *) *iter;
 
             if (ssgnode->color == COLOR_WHITE) {
                 ssgnode->parent = sgnode;
@@ -67,41 +73,41 @@ void bfs(Graph<T> * graph, SampleGNode<T> * gnode) {
 int main(void) {
     Graph<string> * graph = new Graph<string>();
 
-    SampleGNode<string> * n1 = new SampleGNode<string>("A");
-    SampleGNode<string> * n2 = new SampleGNode<string>("B");
-    SampleGNode<string> * n3 = new SampleGNode<string>("C");
-    SampleGNode<string> * n4 = new SampleGNode<string>("D");
-    SampleGNode<string> * n5 = new SampleGNode<string>("E");
-    SampleGNode<string> * n6 = new SampleGNode<string>("F");
-    SampleGNode<string> * n7 = new SampleGNode<string>("G");
+    BfsGNode<string> * na = new BfsGNode<string>("A");
+    BfsGNode<string> * nb = new BfsGNode<string>("B");
+    BfsGNode<string> * nc = new BfsGNode<string>("C");
+    BfsGNode<string> * nd = new BfsGNode<string>("D");
+    BfsGNode<string> * ne = new BfsGNode<string>("E");
+    BfsGNode<string> * nf = new BfsGNode<string>("F");
+    BfsGNode<string> * ng = new BfsGNode<string>("G");
 
-    graph->insert_vertex(n1);
-    graph->insert_vertex(n2);
-    graph->insert_vertex(n3);
-    graph->insert_vertex(n4);
-    graph->insert_vertex(n5);
-    graph->insert_vertex(n6);
-    graph->insert_vertex(n7);
+    graph->insert_vertex(na);
+    graph->insert_vertex(nb);
+    graph->insert_vertex(nc);
+    graph->insert_vertex(nd);
+    graph->insert_vertex(ne);
+    graph->insert_vertex(nf);
+    graph->insert_vertex(ng);
 
-    graph->insert_edge(n1, n2);
-    graph->insert_edge(n1, n4);
-    graph->insert_edge(n1, n3);
+    graph->insert_edge(na, nd);
+    graph->insert_edge(na, nc);
+    graph->insert_edge(na, nb);
 
-    graph->insert_edge(n2, n4);
-    graph->insert_edge(n2, n5);
+    graph->insert_edge(nb, nd);
+    graph->insert_edge(nb, ne);
 
-    graph->insert_edge(n3, n6);
+    graph->insert_edge(nc, nf);
 
-    graph->insert_edge(n4, n6);
-    graph->insert_edge(n4, n7);
-    graph->insert_edge(n4, n3);
+    graph->insert_edge(nd, nf);
+    graph->insert_edge(nd, ng);
+    graph->insert_edge(nd, nc);
 
-    graph->insert_edge(n5, n4);
-    graph->insert_edge(n5, n7);
+    graph->insert_edge(ne, nd);
+    graph->insert_edge(ne, ng);
 
-    graph->insert_edge(n7, n6);
+    graph->insert_edge(ng, nf);
 
-    bfs(graph, n1);
+    bfs(graph, na);
     return 0;
 }
 
