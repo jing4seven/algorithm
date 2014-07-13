@@ -19,6 +19,13 @@ public:
     set<GNode<T>*> adjacent;
     GNode(T d): data(d), adjacent(){
     };
+    GNode operator==(GNode & gn) {
+        if (gn.data == gn.data) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 };
 
 template <typename T>

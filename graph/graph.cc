@@ -5,34 +5,38 @@
 #include <string>
 #include <set>
 
-using namespace std;
-
 /*
  * 所有的顶点是按照从小到大得顺序进行排列, 找到合适的位置，将带插入节点插入即可.
  */
+
+template <typename T>
+bool
+dist_with_gnode(GNode<T> * ln, GNode<T> * rn) {
+    return ln->data == rn->data;
+}
+
+
+template <typename T>
+bool
+comp_with_gnode(GNode<T> * ln, GNode<T> * rn) {
+    return ln->data < rn->data;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // public function
 template <typename T>
 void
 Graph<T>::insert_vertex(const T data) {
-    typename list<GNode<T> *>::iterator iter = adjacents.begin();
-    GNode<T> * gnode = NULL;
-    // ToDo: 修改为二分搜索
-    while (iter != adjacents.end() ) {
-        gnode = (GNode<T> *)*iter;
-        if (gnode->data == data) {
-            return;
-        } else if (gnode->data < data) {
-            break;
-        } else {
-            ++iter;
-        }
-    }
+    int adjcount = this->adjacents.size();
 
-    gnode = new GNode<T>(data);
-    this->adjacents.insert(--iter, gnode);
-    this->vcount++;
+    GNode<T> * gnode = new GNode<T>(data);
+    adjacents.push_back(gnode);
+    adjacents.sort(comp_with_gnode<T>);
+    adjacents.unique(dist_with_gnode<T>);
+
+    if (adjcount < adjacents.size()) {
+        this->vcount++;
+    }
 }
 
 template <typename T>
@@ -75,7 +79,7 @@ Graph<T>::insert_edge(const T s, const T e) {
 
     sgnode->adjacent.insert(egnode);
 
-    this->vcount++;
+    this->ecount++;
 }
 
 template <typename T>
@@ -111,12 +115,13 @@ Graph<T>::remove_vertex(const T data) {
     }
 
     set<GNode<T>*> gadjacent = gnode->adjacent;
+    // 清空邻接表之前记得要同步边的数量
+    this->ecount = this->ecount - gadjacent.size();
     gadjacent.clear();
-
 
     adjacents.erase(niter);
 
-    this->ecount--;
+    this->vcount--;
 }
 
 template <typename T>
@@ -128,19 +133,7 @@ Graph<T>::remove_edge(const T s, const T e) {
         return;
     }
 
-    typename set<GNode<T>*>::iterator iter = NULL;
-
-    if (gnode->adjacent== NULL) {
-        return;
-    }
-
-    iter = gnode->adjacent->find(e);
-
-    if (iter) {
-        gnode->adjacent->erase(iter);
-    }
-
-    this->vcount--;
+    remove_adjacent(gnode->adjacent, e);
 }
 
 template <typename T>
@@ -156,6 +149,8 @@ Graph<T>::get_adjacent(const T data) const {
 }
 ////////////////////////////////////////////////////////////////////////////////
 // private function
+
+
 template <typename T>
 GNode<T> *
 Graph<T>::get_vertex(const T data) const {
@@ -197,12 +192,13 @@ Graph<T>::remove_adjacent(set<GNode<T>*> &adjacent, const T adjdata) {
 int main(void) {
     Graph<string> * graph = new Graph<string>();
 
-    graph->insert_vertex("A");
-    graph->insert_vertex("B");
-    graph->insert_vertex("C");
     graph->insert_vertex("D");
+    graph->insert_vertex("C");
+    graph->insert_vertex("A");
     graph->insert_vertex("E");
+    graph->insert_vertex("B");
     graph->insert_vertex("F");
+    graph->insert_vertex("G");
     graph->insert_vertex("G");
 
     graph->insert_edge("A", "B");
@@ -239,10 +235,15 @@ int main(void) {
         ++iter;
     }
 
+    cout << "vcount:" << graph->vcount << endl;
+    cout << "ecount:" << graph->ecount << endl;
+
     cout << "--------------------" << endl;
 
     graph->remove_vertex("A");
     graph->remove_vertex("C");
+
+    graph->remove_edge("E", "D");
 
     iter = graph->adjacents.begin();
 
@@ -257,6 +258,8 @@ int main(void) {
         ++iter;
     }
 
+    cout << "vcount:" << graph->vcount << endl;
+    cout << "ecount:" << graph->ecount << endl;
     cout << "--------------------" << endl;
     return 0;
 }
