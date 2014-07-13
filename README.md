@@ -67,7 +67,9 @@
     * 二分搜索
         * [C++](https://github.com/jing4seven/algorithm/blob/master/search/binary.search.cc)
     * 广度优先搜索
+        * [C++](https://github.com/jing4seven/algorithm/blob/master/search/bfs.cc)
     * 深度优先搜索
+        * [C++](https://github.com/jing4seven/algorithm/blob/master/search/dfs.cc)
     * [UNIT TEST](https://github.com/jing4seven/algorithm/blob/master/search/unit.test.search.cc)
     * 小结
 5. 分析方法
@@ -76,9 +78,14 @@
     * 小结
 6. 图算法
     * 图接口的定义
-        * [C++] (https://github.com/jing4seven/algorithm/blob/master/graph.definition.md)
-    * 最小生成树（Prim和Kruskal算法）
-    * 单源最短路径（Bellman-Ford和Dijkstra算法）
+        * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/graph.definition.md)
+    * 最小生成树
+        * Dijkstra 算法
+        * Prim 算法
+        * Kruskal 算法
+    * 单源最短路径
+        * Bellman-Ford 算法
+        * Dijkstra 算法
     * 所有节点的最短路径问题
     * 最大流（Ford-Fulkerson算法）
     * 小结
