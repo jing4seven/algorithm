@@ -6,7 +6,6 @@
 wget https://googletest.googlecode.com/file/gtest-1.6.0.zip
 tar -vzxf gtest-1.7.0.zip
 
-
 # 将googletest拷贝到/usr/local/gtest中
 cd gtest-1.7.0
 sudo mkdir /usr/local/gtest
@@ -21,8 +20,6 @@ ar -rv libgtest.a gtest-all.o
 
 ### 编译测试文件 
 <pre><code>
-
-
 # 以`tree/unit.test.tree.cc`为例来说明如何编译具体的测试文件
 # 执行如下命令前，需要将libgtest.a拷贝到tree目录下，在测试文件中，需要引用`#include<gtest/gtest.h>`
 g++ -g unit.test.tree.cc search.tree.cc libgtest.a -o unit.test.tree.out

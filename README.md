@@ -79,6 +79,6 @@
     * 近似算法
     * 小结
 8. 资源
-    * [googletest](https://github.com/jing4seven/algorithm/blob/master/tree/googletest.setup.md)
+    * [googletest](https://github.com/jing4seven/algorithm/blob/master/res/googletest.setup.md)
 
 
