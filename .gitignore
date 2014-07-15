@@ -1,1 +1,8 @@
+# For complied files on unix/Linux
 *.out
+
+# For complied files on Mac OS X
+*.out.*/
+
+
+*.a

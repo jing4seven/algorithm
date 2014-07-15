@@ -27,7 +27,7 @@ namespace {
             t1_->insert(30);
             t1_->insert(20);
             t1_->insert(40);
-            t1_->insert(10);
+            t1_->insert(1);
             t1_->insert(25);
             t1_->insert(35);
             t1_->insert(50);
@@ -42,7 +42,7 @@ namespace {
             t2_->insert(40);
             t2_->insert(10);
             t2_->insert(25);
-            t2_->insert(35);
+            t2_->insert(3);
             t2_->insert(50);
             t2_->insert(5);
             t2_->insert(15);
@@ -67,7 +67,13 @@ namespace {
 
     TEST_F(BinarySearchTreeTest, findMinTest) {
         int minElm = t0_->findMin();
-        EXPECT_EQ(5, minElm);
+        ASSERT_EQ(5, minElm);
+
+        minElm = t1_->findMin();
+        ASSERT_EQ(1, minElm);
+
+        minElm = t2_->findMin();
+        ASSERT_EQ(3, minElm);
     }
 
 } // namespace
