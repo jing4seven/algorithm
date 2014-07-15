@@ -2,6 +2,7 @@
 #include <exception>
 #include <cctype>
 #include <stdexcept>
+#include <string.h>
 #include "printTree.h"
 #include "search.tree.h"
 
@@ -58,6 +59,11 @@ BinarySearchTree::makeEmpty() {
 }
 
 void
+BinarySearchTree::traversal(string & out) const {
+    return traversal((const BinaryNode *&)root, out);
+}
+
+void
 BinarySearchTree::insert(const int data) {
     // 传递root节点的引用
     insert(root, data);
@@ -81,7 +87,6 @@ BinarySearchTree::operator=(const BinarySearchTree & tree) {
 
 BinaryNode *
 BinarySearchTree::findMin(BinaryNode * node) const {
-
     if (node == NULL)
         return NULL;
 
@@ -94,7 +99,6 @@ BinarySearchTree::findMin(BinaryNode * node) const {
 
 BinaryNode *
 BinarySearchTree::findMax(BinaryNode * node) const {
-
     if (node == NULL)
         return NULL;
 
@@ -110,13 +114,14 @@ BinarySearchTree::contains(const BinaryNode * &node, const int data) const {
     if (node == NULL) {
         return false;
     } else if (data < node->elm) {
-        contains((const BinaryNode *&)node->left, data);
+        return contains((const BinaryNode *&)node->left, data);
     } else if (data > node->elm) {
         return contains((const BinaryNode *&)node->right, data);
     } else if (data == node->elm) {
         return true;
     }
 }
+
 void
 BinarySearchTree::insert(BinaryNode * & node, const int data) {
     if (node == NULL) {
@@ -161,6 +166,22 @@ BinarySearchTree::makeEmpty(BinaryNode * &node) {
         delete node;
     }
     node = NULL;
+}
+
+void
+BinarySearchTree::traversal(const BinaryNode *&node, string & out) const {
+    if (!node)
+        return;
+
+    if (node->left) {
+        traversal((const BinaryNode *&)node->left, out);
+    }
+
+    // ToDo: append node->elm to out string;
+
+    if (node->right) {
+        traversal((const BinaryNode *&)node->left, out);
+    }
 }
 
 BinaryNode *

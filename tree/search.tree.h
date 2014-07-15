@@ -21,6 +21,9 @@
 #define ALG_TREE_BINARYSEARCHTREE_H
 
 #include "binary.node.h"
+#include <string.h>
+
+using namespace std;
 
 class BinarySearchTree {
 public:
@@ -34,6 +37,7 @@ public:
     bool contains(const int data) const;
     bool isEmpty() const;
     void makeEmpty();
+    void traversal(string & out) const;
 
     void insert(const int data);
     void remove(const int data);
@@ -52,6 +56,7 @@ private:
     void remove(BinaryNode * &node, const int data);
 
     void makeEmpty(BinaryNode * &node);
+    void traversal(const BinaryNode * &node, string & out) const;
     BinaryNode * clone(const BinaryNode * t) const;
 };
 #endif
