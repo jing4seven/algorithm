@@ -168,10 +168,11 @@ AvlTree::insert(AvlNode * &node, AvlNode * pnode, int d) {
 void
 AvlTree::remove(AvlNode * &node, int d) {
     if (node->elm < d) {
-        remove((AvlNode *&)node->left, d);
-    } else if (node->elm > d){
         remove((AvlNode *&)node->right, d);
+    } else if (node->elm > d){
+        remove((AvlNode *&)node->left, d);
     } else {
+        AvlNode * tagNode;
         if (node->right != NULL && node->left != NULL) {
             // 首先找到右节点中最小值节点
             AvlNode * tmpNode = findMin((AvlNode *)(node->right));
@@ -179,21 +180,24 @@ AvlTree::remove(AvlNode * &node, int d) {
             // 如果最小节点就是node的右节点
             // 直接用node的右节点代替node
             if (tmpNode == node->right) {
-                transplant(node, (AvlNode *&)node->right);
+                //  记录平衡可能被打破的节点
+                tagNode = tmpNode;
                 tmpNode->left = node->left;
+                transplant(node, (AvlNode *&)node->right);
             } else {
             // 否则，先用tmpNode代替node, 再将tmpNode的子节点
             // （右节点）并入到tmpNode原先的父节的左子节点上
                 AvlNode * tmpPNode = tmpNode->parent;
-                transplant(node, (AvlNode *&)tmpNode);
+
+                //  记录平衡可能被打破的节点
+                tagNode = tmpPNode;
+
+                tmpPNode->left = tmpNode->right;
+
                 tmpNode->left = node->left;
                 tmpNode->right= node->right;
-
-                if (tmpPNode) {
-                    tmpPNode->left = tmpNode->right;
-                }
+                transplant(node, tmpNode);
             }
-
         } else {
             // 此时直接删除即可
             // 首先需要计算子节点
@@ -201,11 +205,37 @@ AvlTree::remove(AvlNode * &node, int d) {
                 (AvlNode *)node->left :
                 (AvlNode *)node->right;
 
+            //  记录平衡可能被打破的节点
+            tagNode = tmpNode;
+
             transplant(node, tmpNode);
         }
 
         delete node;
         updateHeight(root);
+/*
+        // 检查并修复平衡性
+        if ( getHeight((const AvlNode *&)tagNode->left)-
+                getHeight((const AvlNode *&)tagNode->right) == 2) {
+            AvlNode * subNode = (AvlNode *&)tagNode->left;
+
+            if ( getHeight((const AvlNode *&)subNode->right) >
+                        getHeight((const AvlNode *&)subNode->left)) {
+                leftRightRotate(tagNode);
+            } else {
+                rightRotate(tagNode);
+            }
+        } else if ( getHeight((const AvlNode *&)tagNode->right)-
+                getHeight((const AvlNode *&)tagNode->left) == 2) {
+            AvlNode * subNode = (AvlNode *&)tagNode->left;
+
+            if ( getHeight((const AvlNode *&)subNode->left) >
+                        getHeight((const AvlNode *&)subNode->right)) {
+                rightLeftRotate(tagNode);
+            } else {
+                leftRotate(tagNode);
+            }
+        }*/
     }
 }
 
@@ -216,7 +246,6 @@ AvlTree::makeEmpty(AvlNode * &node) {
         makeEmpty((AvlNode *&)node->right);
         delete node;
     }
-    node = NULL;
 }
 
 void
@@ -280,21 +309,24 @@ AvlTree::updateHeight(AvlNode * &node) {
 }
 
 // Replace node1 with node 2
-void AvlTree::transplant(AvlNode *&node1, AvlNode *&node2){
+void
+AvlTree::transplant(AvlNode *&node1, AvlNode *&node2){
     if (node1 == node2) {
         return;
     }
 
     if (node1->parent == NULL) {
         root = node2;
+        root->parent = NULL;
+        return;
     } else {
         if (node1->parent->left == node1) {
             node1->parent->left = node2;
         } else
             node1->parent->right = node2;
-    }
 
-    node2->parent = node1->parent;
+        node2->parent = node1->parent;
+    }
 }
 
 int
