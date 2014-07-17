@@ -17,6 +17,7 @@ AvlTree::~AvlTree() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Public functions
 
 int
 AvlTree::findMin() const {
@@ -37,9 +38,7 @@ AvlTree::contains(const int d) const {
 
 void
 AvlTree::makeEmpty() {
-    cout << "yes1" <<endl;
     if (isEmpty() == false) {
-        cout << "yes2" <<endl;
         makeEmpty(root);
     }
 }
@@ -68,12 +67,14 @@ AvlTree &
 AvlTree::operator=(const AvlTree & tree) {
     if (this != &tree) {
         makeEmpty();
-        root = clone((const AvlNode *&)tree.root);
+        root = clone((const AvlNode *&)tree.root,
+                (AvlNode *)NULL);
     }
     return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Private functions
 
 AvlNode *
 AvlTree::findMin(AvlNode * node) const {
@@ -90,7 +91,6 @@ AvlTree::findMax(AvlNode * node) const {
     else
         return node;
 }
-
 
 bool
 AvlTree::contains(const AvlNode * &node,  const int data) const {
@@ -134,7 +134,7 @@ AvlTree::insert(AvlNode * &node, AvlNode * pnode, int d) {
     } else if (d<node->elm) {
         insert((AvlNode*&)node->left,node, d);
 
-        // 检查平衡性
+        // 检查并修复平衡性
         if (getHeight((const AvlNode *&)node->left) -
                 getHeight((const AvlNode *&)node->right) == 2) {
                 AvlNode * tmpNode = (AvlNode *)node->left;
@@ -149,7 +149,7 @@ AvlTree::insert(AvlNode * &node, AvlNode * pnode, int d) {
     } else if (d>node->elm) {
         insert((AvlNode*&)node->right,node, d);
 
-        // 检查平衡性
+        // 检查并修复平衡性
         if (getHeight((const AvlNode *&)node->right) -
                 getHeight((const AvlNode *&)node->left) == 2) {
                 AvlNode * tmpNode = (AvlNode *)node->right;
@@ -162,7 +162,7 @@ AvlTree::insert(AvlNode * &node, AvlNode * pnode, int d) {
         }
 
     } else
-        ; // If d exists, do nothing.
+        ; // 如果d（要插入）的数已经存在，不作处理
 
     // 为了可以得到更新后的节点高度，这里需要对node更新高度
     node->height = max(getHeight((const AvlNode *&)node->left),
@@ -171,13 +171,16 @@ AvlTree::insert(AvlNode * &node, AvlNode * pnode, int d) {
 
 void
 AvlTree::remove(AvlNode * &node, int d) {
+    if (node == NULL)
+        return;
+
     if (node->elm < d) {
         remove((AvlNode *&)node->right, d);
     } else if (node->elm > d){
         remove((AvlNode *&)node->left, d);
     } else {
-        AvlNode * tagNode,  // 记录平衡可能被打破的节点
-                * dNode;    // 记录即将被删除的节点
+        AvlNode * tagNode,          // 记录平衡可能被打破的节点
+                * dNode = node;    // 记录即将被删除的节点
 
         if (node->right != NULL && node->left != NULL) {
             // 首先找到右节点中最小值节点
@@ -186,67 +189,51 @@ AvlTree::remove(AvlNode * &node, int d) {
             // 如果最小节点就是node的右节点
             // 直接用node的右节点代替node
             if (tmpNode == node->right) {
-                dNode = node;
                 tmpNode->left = node->left;
-
-                if (node->left)
-                    ((AvlNode *)node->left)->parent = tmpNode;
 
                 //  记录平衡可能被打破的节点
                 tagNode = tmpNode;
-                transplant(node, (AvlNode *&)node->right);
             } else {
             // 否则，先用tmpNode代替node, 再将tmpNode的子节点
             // （右节点）并入到tmpNode原先的父节的左子节点上
-                AvlNode * tmpPNode = tmpNode->parent;
 
-                dNode = node;
-                tmpPNode->left = tmpNode->right;
-                //tmpPNode->parent = tmpNode;
+                // tmpNode将代替node，那么它的右子节点（如果有
+                // 子节点的话，只能是右子节点）作为tmpNode父节
+                // 点得左子节点.
+                tmpNode->parent->left = tmpNode->right;
 
+                // 将tmpNode替代node之前，将node的子节点赋予给
+                // tmpNode，因为transplant不处理子节点的转移。
                 tmpNode->left = node->left;
                 tmpNode->right= node->right;
 
-                if (node->left)
-                    ((AvlNode *)node->left)->parent = tmpNode;
-
-                if (node->right)
-                    ((AvlNode *)node->right)->parent = tmpNode;
-
                 //  记录平衡可能被打破的节点
-                tagNode = tmpPNode;
-
-                transplant(node, tmpNode);
+                tagNode = tmpNode->parent;
             }
+
+            if (node->left)
+                ((AvlNode *)node->left)->parent = tmpNode;
+
+            if (node->right)
+                ((AvlNode *)node->right)->parent = tmpNode;
+
+            transplant(node, tmpNode);
         } else {
-            // 此时直接删除即可
+        // 此时直接删除即可
+
             // 首先需要计算子节点
             AvlNode * tmpNode = node->left != NULL ?
                 (AvlNode *)node->left :
                 (AvlNode *)node->right;
 
-            if (tmpNode == NULL) {
-                // 记录平衡可能被打破的节点
-                tagNode = node->parent;
-                dNode = node;
-
-                if (node->parent) {
-                //cout << node->parent->elm<<endl;
-                    if (node->parent->left == node) {
-                        node->parent->left = NULL;
-                    } else {
-                        node->parent->right = NULL;
-                    }
-                }
-            } else {
-                // 记录平衡可能被打破的节点
-                tagNode = node->parent;
-                dNode = node;
-                transplant(node, tmpNode);
-            }
+            // 记录平衡可能被打破的节点
+            tagNode = node->parent;
+            // transplant包含tmpNode为NULL的情况
+            transplant(node, tmpNode);
         }
 
-        delete node;
+        delete dNode;
+        dNode = NULL;
 
         updateHeight(root);
 
@@ -255,8 +242,11 @@ AvlTree::remove(AvlNode * &node, int d) {
 
         // 检查并修复平衡性
         int lH(0), rH(0);
-        lH = getHeight((const AvlNode *&)tagNode->left);
-        rH = getHeight((const AvlNode *&)tagNode->right);
+        if (tagNode->left)
+            lH = getHeight((const AvlNode *&)tagNode->left);
+
+        if (tagNode->right)
+            rH = getHeight((const AvlNode *&)tagNode->right);
 
         if ( lH - rH == 2) {
             AvlNode * subNode = (AvlNode *)tagNode->left;
@@ -282,9 +272,13 @@ AvlTree::remove(AvlNode * &node, int d) {
 
 void
 AvlTree::makeEmpty(AvlNode * &node) {
+    if (node!=NULL) {
         makeEmpty((AvlNode *&)node->left);
         makeEmpty((AvlNode *&)node->right);
+
         delete node;
+        node = NULL;
+    }
 }
 
 void
@@ -306,32 +300,28 @@ AvlTree::traversal(const AvlNode *& node, ostringstream & out) const {
 }
 
 AvlNode *
-AvlTree::clone(const AvlNode * &node){
+AvlTree::clone(const AvlNode * &node, AvlNode * pNode){
     AvlNode * tmpNode = new AvlNode(node->elm,
-            (AvlNode *)node->left,
-            (AvlNode *)node->right,
-            NULL);
+            NULL, NULL, (AvlNode *)pNode);
 
     if (node->left)
-        tmpNode->left = clone((const AvlNode *&)node->left);
+        tmpNode->left = clone((const AvlNode *&)node->left,
+                tmpNode);
 
     if (node->right)
-        tmpNode->right = clone((const AvlNode *&)node->right);
+        tmpNode->right = clone((const AvlNode *&)node->right,
+                tmpNode);
 
     return tmpNode;
 }
 
+// 更新node（含）下所有节点的高度
 void
 AvlTree::updateHeight(AvlNode * &node) {
-    // Only update for insert item action.
-    //if (node->parent) {
-    //    if (node->parent->height == node->height) {
-    //        node->parent->height++;
-    //        updateHeight(node->parent);
-    //    }
-    //}
+    if (node == NULL) {
+        return;
+    }
 
-    // Update height for all items of node
     int lH(0), rH(0);
 
     if (node->left) {
@@ -365,7 +355,9 @@ AvlTree::transplant(AvlNode *&node1, AvlNode *&node2){
         } else
             node1->parent->right = node2;
     }
-    node2->parent = tmpNode->parent;
+
+    if (node2)
+        node2->parent = tmpNode->parent;
 }
 
 int
@@ -452,40 +444,49 @@ AvlTree::leftRightRotate(AvlNode * &node){
 int main() {
     AvlTree * tree = new AvlTree();
     tree->insert(30);
-/*    tree->insert(20);*/
-    //tree->insert(40);
-    //tree->insert(10);
-    //tree->insert(25);
-    //tree->insert(35);
-    //tree->insert(50);
-    //tree->insert(5);
-    //tree->insert(15);
-    //tree->insert(28);
-    //tree->insert(41);
+    tree->insert(20);
+    tree->insert(40);
+    tree->insert(10);
+    tree->insert(25);
+    tree->insert(35);
+    tree->insert(50);
+    tree->insert(5);
+    tree->insert(15);
+    tree->insert(28);
+    tree->insert(41);
+    tree->insert(41);
 
     cout << "Print tree:"<<endl;
     //tree->printfTree(cout);
     printPretty(tree->root, 1, 0, cout);
 
-    tree->remove(30);
-    /*tree->remove(20);*/
-    //tree->remove(5);
-    //tree->remove(10);
-    //tree->remove(50);
-    //tree->remove(41);
-    //tree->remove(40);
-    //tree->remove(28);
-    //tree->remove(25);
-    /*tree->remove(35);*/
-    //tree->remove(15);
+    cout << "Create a tree2 that clone from tree." <<endl;
+    AvlTree * tree2 = new AvlTree();
+    *tree2 = *tree;
 
+    tree->remove(115);
+
+    tree->remove(30);
+    tree->remove(20);
+    tree->remove(5);
+    tree->remove(10);
+    tree->remove(50);
+    tree->remove(41);
+    tree->remove(40);
+    tree->remove(28);
+    tree->remove(25);
+    tree->remove(35);
+    tree->remove(15);
 
     cout << "After remove root item:" <<endl;
-    cout << tree->root->elm <<endl;
+    //cout << tree->root->elm <<endl;
     //tree->printfTree(cout);
     printPretty(tree->root, 1, 0, cout);
 
-    tree->makeEmpty();
+    cout << "Print tree2:" <<endl;
+    printPretty(tree2->root, 1, 0, cout);
 
+    tree->makeEmpty();
+    tree2->makeEmpty();
     return 0;
 }

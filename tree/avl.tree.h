@@ -62,7 +62,7 @@ private:
 
     void makeEmpty(AvlNode * &node);
     void traversal(const AvlNode * &node, ostringstream & out) const;
-    AvlNode * clone(const AvlNode * &node);
+    AvlNode * clone(const AvlNode * &node, AvlNode * pNode);
 
     void updateHeight(AvlNode * &node);
     void transplant(AvlNode *&node1, AvlNode *&node2);
