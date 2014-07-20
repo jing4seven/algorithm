@@ -69,7 +69,6 @@ private:
 
     int getHeight(const AvlNode *&node) const;
 
-    void blanceTree(AvlNode * &node);
     void leftRotate(AvlNode * &node);
     void rightRotate(AvlNode * &node);
     void rightLeftRotate(AvlNode * &node);
