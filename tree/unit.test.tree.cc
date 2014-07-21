@@ -5,6 +5,7 @@
 #include "search.tree2.h"
 #include "avl.tree.h"
 #include "printTree.h"
+#include "rb.tree.h"
 
 namespace {
 
@@ -16,6 +17,7 @@ namespace {
             t0_ = new BinarySearchTree();
             t1_ = new BinarySearchTree2();
             t2_ = new AvlTree();
+            t3_ = new RBTree();
             /*
                     ______30______
                    /              \
@@ -43,6 +45,7 @@ namespace {
                 t0_->insert(*iter);
                 t1_->insert(*iter);
                 t2_->insert(*iter);
+                t3_->insert(*iter);
                 ++iter;
             }
         }
@@ -51,15 +54,18 @@ namespace {
             delete t0_;
             delete t1_;
             delete t2_;
+            delete t3_;
 
             t0_ = NULL;
             t1_ = NULL;
             t2_ = NULL;
+            t3_ = NULL;
         }
 
         BinarySearchTree    * t0_;
         BinarySearchTree2   * t1_;
         AvlTree             * t2_;
+        RBTree              * t3_;
         vector<int> testData;
     };
 
@@ -68,6 +74,7 @@ namespace {
         ASSERT_EQ(5, t0_->findMin());
         ASSERT_EQ(5, t1_->findMin());
         ASSERT_EQ(5, t2_->findMin());
+        ASSERT_EQ(5, t3_->findMin());
     }
 
     // contains
@@ -75,15 +82,17 @@ namespace {
         ASSERT_EQ(true, t0_->contains(5));
         ASSERT_EQ(true, t1_->contains(5));
         ASSERT_EQ(true, t2_->contains(5));
+        ASSERT_EQ(true, t3_->contains(5));
     }
 
     // traversal
     TEST_F(BinarySearchTreeTest, traversalTest) {
-        ostringstream osm0, osm1, osm2, testDataOsm;
+        ostringstream osm0, osm1, osm2, osm3, testDataOsm;
 
         t0_->traversal(osm0);
         t1_->traversal(osm1);
         t2_->traversal(osm2);
+        t3_->traversal(osm3);
 
         sort(testData.begin(), testData.end(), less<int>());
 
@@ -96,6 +105,7 @@ namespace {
         ASSERT_EQ(testDataOsm.str(), osm0.str());
         ASSERT_EQ(testDataOsm.str(), osm1.str());
         ASSERT_EQ(testDataOsm.str(), osm2.str());
+        ASSERT_EQ(testDataOsm.str(), osm3.str());
     }
 
     // insert
@@ -188,7 +198,7 @@ namespace {
 
         t0_->traversal(osm0);
         t1_->traversal(osm1);
-        t1_->traversal(osm2);
+        t2_->traversal(osm2);
 
         testDataOsm << "";
 
@@ -199,43 +209,50 @@ namespace {
     }
 
     TEST_F(BinarySearchTreeTest, makeEmptyTest) {
-        ostringstream osm0, osm1, osm2, testDataOsm;
+        ostringstream osm0, osm1, osm2, osm3, testDataOsm;
 
         t0_->makeEmpty();
         t1_->makeEmpty();
         t2_->makeEmpty();
+        t3_->makeEmpty();
 
         t0_->traversal(osm0);
         t1_->traversal(osm1);
         t2_->traversal(osm2);
+        t3_->traversal(osm2);
 
         testDataOsm << "";
 
         ASSERT_EQ(testDataOsm.str(), osm0.str());
         ASSERT_EQ(testDataOsm.str(), osm1.str());
         ASSERT_EQ(testDataOsm.str(), osm2.str());
+        ASSERT_EQ(testDataOsm.str(), osm3.str());
     }
 
     // clone
     TEST_F(BinarySearchTreeTest, cloneTest) {
-        ostringstream osm0, osm1, osm2, testDataOsm;
+        ostringstream osm0, osm1, osm2, osm3, testDataOsm;
 
         BinarySearchTree * _t0  = new BinarySearchTree();
         BinarySearchTree2 * _t1 = new BinarySearchTree2();
         AvlTree * _t2           = new AvlTree();
+        RBTree * _t3            = new RBTree();
 
         // 通过等号运算符重载运行clone
         *_t0 = *t0_;
         *_t1 = *t1_;
         *_t2 = *t2_;
+        *_t3 = *t3_;
 
         t0_->makeEmpty();
         t1_->makeEmpty();
         t2_->makeEmpty();
+        t3_->makeEmpty();
 
         _t0->traversal(osm0);
         _t1->traversal(osm1);
         _t2->traversal(osm2);
+        _t3->traversal(osm3);
 
         sort(testData.begin(), testData.end(), less<int>());
         vector<int>::const_iterator iter = testData.begin();
@@ -247,7 +264,14 @@ namespace {
         ASSERT_EQ(testDataOsm.str(), osm0.str());
         ASSERT_EQ(testDataOsm.str(), osm1.str());
         ASSERT_EQ(testDataOsm.str(), osm2.str());
+        ASSERT_EQ(testDataOsm.str(), osm3.str());
     }
+
+    // rbtree insert test
+    // todo
+
+    // rbtree remove test
+    // todo
 ////////////////////////////////////////////////////////////////////////////////
 
 } // namespace

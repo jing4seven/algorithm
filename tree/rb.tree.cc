@@ -199,7 +199,7 @@ RBTree::makeEmpty(RBNode * &node) {
 }
 
 void
-RBTree::traversal(const RBNode *& node, ostringstream & out) const {
+RBTree::traversalWithColor(const RBNode *& node, ostringstream & out) const {
     if (!node)
         return;
 
@@ -209,6 +209,24 @@ RBTree::traversal(const RBNode *& node, ostringstream & out) const {
 
     if (node) {
         out << node->elm << "(" << getColor(node) << ")" << ",";
+    }
+
+    if (node->right) {
+        traversal((const RBNode *&)node->right, out);
+    }
+}
+
+void
+RBTree::traversal(const RBNode *& node, ostringstream & out) const {
+    if (!node)
+        return;
+
+    if (node->left) {
+        traversal((const RBNode *&)node->left, out);
+    }
+
+    if (node) {
+        out << node->elm << ",";
     }
 
     if (node->right) {
@@ -318,9 +336,9 @@ RBTree::removeFixup(RBNode *&node, RBNode *&pNode) {
             }
 
             // case 2: bNode->color 是黑色，双子节点都是黑色
-            if (((RBNode *)bNode->left == NIL ||
+            if ((bNode->left == NIL ||
                         ((RBNode *)bNode->left)->color == BLACK_COLOR) &&
-                  ((RBNode *)bNode->right == NIL ||
+                  (bNode->right == NIL ||
                         ((RBNode *)bNode->right)->color == BLACK_COLOR)) {
                 bNode->color = RED_COLOR;
                 // 将node移动至其父节点
@@ -341,6 +359,7 @@ RBTree::removeFixup(RBNode *&node, RBNode *&pNode) {
                 ((RBNode *)bNode->right)->color = BLACK_COLOR;
 
                 leftRotate(pNode);
+                pNode = bNode;
             }
         } else {
             RBNode * bNode = (RBNode *)pNode->left;
@@ -378,10 +397,13 @@ RBTree::removeFixup(RBNode *&node, RBNode *&pNode) {
                 ((RBNode *)bNode->left)->color = BLACK_COLOR;
 
                 rightRotate(pNode);
+                pNode = bNode;
             }
         }
     }
-    node->color = BLACK_COLOR;
+
+    if (node!=NIL)
+        node->color = BLACK_COLOR;
 }
 
 void
@@ -445,34 +467,43 @@ RBTree::leftRightRotate(RBNode * &node){
     leftRotate((RBNode *&)node->left);
     rightRotate(node);
 }
-
+/*
 int main(void) {
     RBTree * tree = new RBTree();
 
     cout << ( tree->root == NIL ) << endl;
 
-    tree->insert(30);
-    tree->insert(20);
-    tree->insert(40);
-    tree->insert(10);
-    tree->insert(25);
-    tree->insert(35);
-    tree->insert(50);
-    tree->insert(5);
-    tree->insert(15);
-    tree->insert(28);
-    tree->insert(41);
+    // 组建一棵树：
+    tree->root                      = new RBNode(3, NULL, NULL,
+            NULL, BLACK_COLOR);
+    tree->root->left                = new RBNode(1, NULL, NULL,
+            tree->root, BLACK_COLOR);
+    tree->root->left->right         = new RBNode(2, NULL, NULL,
+            (RBNode *)tree->root->left, BLACK_COLOR);
+    tree->root->right               = new RBNode(6, NULL, NULL,
+            tree->root, RED_COLOR);
+    tree->root->right->left         = new RBNode(4, NULL, NULL,
+            (RBNode *)tree->root->right, BLACK_COLOR);
+    tree->root->right->left->right  = new RBNode(5, NULL, NULL,
+            (RBNode *)tree->root->right->left, BLACK_COLOR);
+    tree->root->right->right        = new RBNode(7, NULL, NULL,
+            (RBNode *)tree->root->right, BLACK_COLOR);
+    tree->root->right->right->right = new RBNode(8, NULL, NULL,
+            (RBNode *)tree->root->right->right, BLACK_COLOR);
 
     ostringstream os1, os2;
-    tree->traversal(os1);
+    tree->traversalWithColor(os1);
 
-    tree->remove(35);
-    tree->traversal(os2);
+    printPretty(tree->root, 1, 0, cout);
 
     cout << os1.str() << endl;
+
+    tree->remove(1);
+    tree->traversalWithColor(os2);
+
     cout << os2.str() << endl;
 
     printPretty(tree->root, 1, 0, cout);
 
     return 0;
-}
+}*/

@@ -32,6 +32,11 @@ public:
     RBNode(int d, RBNode * l, RBNode * r,
             RBNode * p): BinaryNode(d, l, r),
             parent(p), color(RED_COLOR) {}
+
+    RBNode(int d, RBNode * l, RBNode * r,
+            RBNode * p, int c): BinaryNode(d, l, r),
+            parent(p), color(c) {}
+
 };
 
 class RBTree {
@@ -66,6 +71,7 @@ private:
 
     void makeEmpty(RBNode * &node);
     void traversal(const RBNode * &node, ostringstream & out) const;
+    void traversalWithColor(const RBNode * &node, ostringstream & out) const;
     RBNode * clone(const RBNode * &node, RBNode * pNode);
 
     void transplant(RBNode *&node1, RBNode *&node2);
