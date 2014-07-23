@@ -11,7 +11,7 @@ namespace {
 
 ////////////////////////////////////////////////////////////////////////////////
     // Test for all binary search trees.
-    class BinarySearchTreeTest: public ::testing::Test {
+    class BinarySearchTreeTest: public ::testing::Test{
     protected:
         virtual void SetUp() {
             t0_ = new BinarySearchTree();
@@ -269,7 +269,7 @@ namespace {
 
     // rbtree insert test
     TEST_F(BinarySearchTreeTest, RBTreeInsertTest) {
-        printPretty(t3_->root, 4, 0, cout);
+        //printPretty(t3_->root, 4, 0, cout);
 
         t3_->insert(22);
         t3_->insert(6);
@@ -283,39 +283,146 @@ namespace {
 
         vector<RBNode *> vecrb;
         t3_->preOrder(vecrb);
-        vector<RBNode *>::const_iterator iter = vecrb.begion();
+        vector<RBNode *>::iterator iter = vecrb.begin();
 
         //printPretty(t3_->root, 3, 0, cout);
 
         // 红黑树特征测试
         // 特征1. 每个节点，不是红色就使黑色；
-        iter  = vecrb.begion();
+        iter  = vecrb.begin();
         while (iter != vecrb.end()) {
-            //ASSERT_EQ(BLACK_COLOR, (RBNode *)(*iter)->color);
+            ASSERT_GE(BLACK_COLOR, ((RBNode *)(*iter))->color);
+            ASSERT_LE(RED_COLOR, ((RBNode *)(*iter))->color);
             ++iter;
         }
 
         // 特征2：根节点是黑色
-        ASSERT_EQ(BLACK_COLOR, t3_->color)；
+        ASSERT_EQ(BLACK_COLOR, t3_->root->color);
 
         // 特征3：每个叶节点（NIL）都是黑色的；
-        iter  = vecrb.begion();
+        // 一直成立
+
+        // 特征4：如果一个节点是红的，那么它的两个子节点都使黑色的；
+        iter  = vecrb.begin();
+        RBNode * cn, * ln, *rn;
         while (iter != vecrb.end()) {
-            if ((*iter)->left == NULL && (*iter)->right == NULL) {
-                ASSERT_EQ(BLACK_COLOR, (RBNode *)(*iter)->color);
+            cn = (RBNode *)(*iter);
+            ln = (RBNode *)((RBNode *)(*iter)->left);
+            rn = (RBNode *)((RBNode *)(*iter)->right);
+
+            if ( cn !=NULL && cn->color == RED_COLOR) {
+                if ((*iter)->left != NULL)
+                    ASSERT_EQ(BLACK_COLOR, ln->color);
+
+                if ((*iter)->right !=NULL)
+                    ASSERT_EQ(BLACK_COLOR, rn->color);
             }
             ++iter;
         }
 
-        // 特征4：如果一个节点是红的，那么它的两个子节点都使黑色的；
-
         // 特征5：对于每个节点，从该节点到其后代节点的简单路径，均含有相同数目黑
         // 色节点；
+        iter  = vecrb.begin();
+        const RBNode * cln, * crn;
+        int lbn(0), rbn(0);
+        while (iter != vecrb.end()) {
+            cln = (const RBNode *)((RBNode *)(*iter)->left);
+            crn = (const RBNode *)((RBNode *)(*iter)->right);
 
+            if (cln != NULL)
+                lbn = t3_->getBlackHeight(cln);
+            else
+                lbn = 1;
+
+            if (crn !=NULL)
+                rbn = t3_->getBlackHeight(crn);
+            else
+                rbn = 1;
+
+            ASSERT_TRUE(lbn == rbn);
+
+            ++iter;
+        }
     }
 
     // rbtree remove test
     TEST_F(BinarySearchTreeTest, RBTreeRemoveTest) {
+        //printPretty(t3_->root, 4, 0, cout);
+
+        t3_->remove(30);
+        t3_->remove(20);
+        t3_->remove(40);
+        t3_->remove(10);
+ /*       t3_->remove(25);*/
+        //t3_->remove(35);
+        //t3_->remove(50);
+        //t3_->remove(5);
+        //t3_->remove(15);
+        /*t3_->remove(28);*/
+        //t3_->remove(41);
+/*
+        vector<RBNode *> vecrb;
+        t3_->preOrder(vecrb);
+        vector<RBNode *>::iterator iter = vecrb.begin();
+
+        //printPretty(t3_->root, 3, 0, cout);
+
+        // 红黑树特征测试
+        // 特征1. 每个节点，不是红色就使黑色；
+        iter  = vecrb.begin();
+        while (iter != vecrb.end()) {
+            ASSERT_GE(BLACK_COLOR, ((RBNode *)(*iter))->color);
+            ASSERT_LE(RED_COLOR, ((RBNode *)(*iter))->color);
+            ++iter;
+        }
+
+        // 特征2：根节点是黑色
+        ASSERT_EQ(BLACK_COLOR, t3_->root->color);
+
+        // 特征3：每个叶节点（NIL）都是黑色的；
+        // 一直成立
+
+        // 特征4：如果一个节点是红的，那么它的两个子节点都使黑色的；
+        iter  = vecrb.begin();
+        RBNode * cn, * ln, *rn;
+        while (iter != vecrb.end()) {
+            cn = (RBNode *)(*iter);
+            ln = (RBNode *)((RBNode *)(*iter)->left);
+            rn = (RBNode *)((RBNode *)(*iter)->right);
+
+            if ( cn !=NULL && cn->color == RED_COLOR) {
+                if ((*iter)->left != NULL)
+                    ASSERT_EQ(BLACK_COLOR, ln->color);
+
+                if ((*iter)->right !=NULL)
+                    ASSERT_EQ(BLACK_COLOR, rn->color);
+            }
+            ++iter;
+        }
+
+        // 特征5：对于每个节点，从该节点到其后代节点的简单路径，均含有相同数目黑
+        // 色节点；
+        iter  = vecrb.begin();
+        const RBNode * cln, * crn;
+        int lbn(0), rbn(0);
+        while (iter != vecrb.end()) {
+            cln = (const RBNode *)((RBNode *)(*iter)->left);
+            crn = (const RBNode *)((RBNode *)(*iter)->right);
+
+            if (cln != NULL)
+                lbn = t3_->getBlackHeight(cln);
+            else
+                lbn = 1;
+
+            if (crn !=NULL)
+                rbn = t3_->getBlackHeight(crn);
+            else
+                rbn = 1;
+
+            ASSERT_TRUE(lbn == rbn);
+
+            ++iter;
+        }*/
     }
 ////////////////////////////////////////////////////////////////////////////////
 

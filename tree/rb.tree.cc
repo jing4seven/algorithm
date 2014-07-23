@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cctype>
+#include <stack>
 #include "rb.tree.h"
 #include "printTree.h"
 
@@ -70,7 +71,7 @@ RBTree::remove(int d) {
 
 int
 RBTree::getBlackHeight() {
-    getBlackHeight((const RBNode *&)root);
+    return getBlackHeight((const RBNode *&)root);
 }
 
 RBTree &
@@ -83,6 +84,28 @@ RBTree::operator=(const RBTree & tree) {
     return *this;
 }
 
+void
+RBTree::preOrder(vector<RBNode *> & vc) const {
+    RBNode * node = root;
+    stack<RBNode *> ss;
+
+    while (node != NULL || !ss.empty()) {
+        RBNode * tmpNode = node;
+
+        while (node != NULL) {
+            ss.push(node);
+            node=(RBNode *)node->left;
+        }
+
+        if (!ss.empty()) {
+            node= ss.top();
+
+            vc.push_back(node);
+            ss.pop();
+            node = (RBNode *)node->right;
+        }
+    }
+}
 ////////////////////////////////////////////////////////////////////////////////
 // Private functions
 
@@ -147,7 +170,6 @@ RBTree::remove(RBNode * &node, int d) {
                 * pNode;            //
         if (node->left != NIL && node->right != NIL) {
             tmpNode = findMin((RBNode *)node->right);
-            pNode = tmpNode;
 
             originalColor = tmpNode->color;
             xNode = (RBNode *)tmpNode->right;
@@ -165,7 +187,7 @@ RBTree::remove(RBNode * &node, int d) {
                 tmpNode->right = node->right;
             }
 
-            pNode = tmpNode;
+            pNode = tmpNode->parent;
         } else {
             pNode = node->parent;
             if (node->left == NIL) {
@@ -192,7 +214,7 @@ RBTree::remove(RBNode * &node, int d) {
 
         // 只有删除的是黑色节点时，才修复
         if (originalColor == BLACK_COLOR) {
-            removeFixup(tmpNode, pNode);
+            removeFixup(xNode, pNode);
         }
    }
 }
@@ -200,7 +222,7 @@ RBTree::remove(RBNode * &node, int d) {
 int
 RBTree::getBlackHeight(const RBNode * &node) const {
     if (node == NIL) {
-        return 0;
+        return 1;
     }
 
     int lH(0), rH(0);
@@ -380,7 +402,7 @@ RBTree::removeFixup(RBNode *&node, RBNode *&pNode) {
 
                 // 重置标志
                 bNode = (RBNode *)pNode->right;
-
+            } else {
             // case 4: bNode->color 是黑色，左子结点是黑色
                 ((RBNode *)pNode)->color = BLACK_COLOR;
                 bNode->color                    = RED_COLOR;
@@ -418,7 +440,7 @@ RBTree::removeFixup(RBNode *&node, RBNode *&pNode) {
 
                 // 重置标志
                 bNode = (RBNode *)pNode->left;
-
+            } else {
             // case 4: bNode->color 是黑色，左子结点是黑色
                 ((RBNode *)pNode)->color = BLACK_COLOR;
                 bNode->color                    = RED_COLOR;
@@ -495,7 +517,7 @@ RBTree::leftRightRotate(RBNode * &node){
     leftRotate((RBNode *&)node->left);
     rightRotate(node);
 }
-/*
+
 int main(void) {
     RBTree * tree = new RBTree();
 
@@ -526,12 +548,25 @@ int main(void) {
 
     cout << os1.str() << endl;
 
+    tree->remove(3);
+    printPretty(tree->root, 4, 0, cout);
     tree->remove(1);
-    tree->traversalWithColor(os2);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(2);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(6);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(4);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(5);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(7);
+    printPretty(tree->root, 4, 0, cout);
+    tree->remove(8);
 
     cout << os2.str() << endl;
 
     printPretty(tree->root, 4, 0, cout);
 
     return 0;
-}*/
+}

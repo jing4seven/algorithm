@@ -16,6 +16,7 @@
 #ifndef ALG_TREE_RB_BINARYSEARCHTREE_H
 #define ALG_TREE_RB_BINARYSEARCHTREE_H
 #include <sstream>
+#include <vector>
 #include "binary.node.h"
 
 #define RED_COLOR       0
@@ -64,8 +65,10 @@ public:
     void remove(const int data);
 
     int getBlackHeight();
+    int getBlackHeight(const RBNode * &node) const;
 
     RBTree & operator=(const RBTree & tree);
+    void preOrder(vector<RBNode *> & vc) const;
 
     RBNode * root;
 
@@ -78,7 +81,6 @@ private:
     void insert(RBNode * &node, RBNode * pnode, const int d);
     void remove(RBNode * &node, const int d);
 
-    int getBlackHeight(const RBNode * &node) const;
 
     void makeEmpty(RBNode * &node);
     void traversal(const RBNode * &node, ostringstream & out) const;
