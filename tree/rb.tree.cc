@@ -176,6 +176,8 @@ RBTree::remove(RBNode * &node, int d) {
 
             if (node->right == tmpNode) {
                 tmpNode->left = node->left;
+                pNode = tmpNode;
+                xNode = (RBNode *)pNode->right;
             } else {
                 if (tmpNode->parent->left == tmpNode) {
                     tmpNode->parent->left = tmpNode->right;
@@ -185,9 +187,9 @@ RBTree::remove(RBNode * &node, int d) {
 
                 tmpNode->left  = node->left;
                 tmpNode->right = node->right;
+                pNode = tmpNode->parent;
             }
 
-            pNode = node->parent;
         } else {
             pNode = node->parent;
             if (node->left == NIL) {
@@ -196,6 +198,9 @@ RBTree::remove(RBNode * &node, int d) {
                 tmpNode = (RBNode *)node->left;
             }
             xNode = tmpNode;
+
+            if (tmpNode)
+                originalColor = tmpNode->color;
         }
 
         if (node->left != NIL) {
@@ -318,7 +323,7 @@ RBTree::transplant(RBNode *&node1, RBNode *&node2){
 
     // 为了方便修复，这里让node2保持和node1一样额着色
     if (node2 != NIL)
-        node2->color = node1->color;
+        node2->color = tmpNode->color;
 }
 
 int
@@ -372,25 +377,45 @@ RBTree::insertFixup(RBNode *&node) {
 void
 RBTree::removeFixup(RBNode *&node, RBNode *&pNode) {
     while (node!= root && (node==NIL || node->color == BLACK_COLOR)) {
+        int tmpColor;
         if (pNode->left == node) {
             RBNode * bNode = (RBNode *)pNode->right;
-
             // case 1: bNode->color 是红色
             if (bNode != NIL && bNode->color == RED_COLOR) {
-                pNode->color = RED_COLOR;
-                bNode->color = BLACK_COLOR;
+                // 交换 pNode 和 bNode 的颜色
+                // 旋转之后， pNode变为bNode的左子节点, bNode变位node的父节点
+                tmpColor = bNode->color;
+                bNode->color = pNode->color;
+                pNode->color = tmpColor;
                 leftRotate(pNode);
+
                 // 重置标志
                 bNode = (RBNode *)pNode->right;
+            }
+
             // case 2: bNode->color 是黑色，双子节点都是黑色
-            } else if (bNode && (bNode->left == NIL ||
+            if (bNode && (bNode->left == NIL ||
                         ((RBNode *)bNode->left)->color == BLACK_COLOR) &&
                   (bNode->right == NIL ||
                         ((RBNode *)bNode->right)->color == BLACK_COLOR)) {
+                // 这里需要将bNode变位红色，让通过bNode的路径都少一个黑点
+                // 这样一来，删除node后，通过pNode的路径的黑点就平衡了
+                // 但是跟根pNode的兄弟节点比较，通过pNode路径的黑点数量少了
+                // 一个，所以还需要将node移动到pNode处，往上递归
                 bNode->color = RED_COLOR;
+
+                // 如果pNode->color为红色的话，会破坏条件4
+                // 所以这里还需要将其变成红色
+                if (pNode->color == RED_COLOR) {
+                    pNode->color = BLACK_COLOR;
+                    return;
+                }
+
                 // 将node移动至其父节点
                 node = pNode;
                 pNode = node->parent;
+                continue;
+
             } else if ((bNode) && (bNode->right == NIL ||
                     ((RBNode *)bNode->right)->color == BLACK_COLOR)) {
             // case 3: bNode->color 是黑色，右子节点是黑色
@@ -401,11 +426,19 @@ RBTree::removeFixup(RBNode *&node, RBNode *&pNode) {
                 rightRotate(bNode);
 
                 // 重置标志
-                //bNode = (RBNode *)pNode->right;
-            } else if (bNode){
+                bNode = (RBNode *)pNode->right;
+            }
+
+            if ((bNode) && (bNode->left== NIL ||
+                    ((RBNode *)bNode->left)->color == BLACK_COLOR)) {
             // case 4: bNode->color 是黑色，左子结点是黑色
-                ((RBNode *)pNode)->color = BLACK_COLOR;
-                bNode->color = RED_COLOR;
+
+                // 交换pNode和bNode的颜色
+                tmpColor = pNode->color;
+                pNode->color = bNode->color;
+                bNode->color = tmpColor;
+
+                // 将bNode的右孩子变成黑色
                 if (bNode->right)
                     ((RBNode *)bNode->right)->color = BLACK_COLOR;
 
@@ -421,20 +454,34 @@ RBTree::removeFixup(RBNode *&node, RBNode *&pNode) {
 
             // case 1: bNode->color 是红色
             if (bNode != NIL && bNode->color == RED_COLOR) {
-                pNode->color = RED_COLOR;
-                bNode->color        = BLACK_COLOR;
-                leftRotate(pNode);
+                tmpColor     = pNode->color;
+                pNode->color = bNode->color;
+                bNode->color = tmpColor;
+                rightRotate(pNode);
                 // 重置标志
                 bNode = (RBNode *)pNode->left;
+            }
+
             // case 2: bNode->color 是黑色，双子节点都是黑色
-            } else if (bNode && (bNode->left == NIL ||
+            if (bNode && (bNode->left == NIL ||
                         ((RBNode *)bNode->left)->color == BLACK_COLOR) &&
                   (bNode->right == NIL ||
                         ((RBNode *)bNode->right)->color == BLACK_COLOR)) {
                 bNode->color = RED_COLOR;
+
+                if (pNode->color == RED_COLOR) {
+                    pNode->color = BLACK_COLOR;
+                    // 如果pNode也为红色，交换颜色正好可以平衡
+                    // 退出循环即可
+                    return;
+                }
                 // 将node移动至其父节点
                 node = pNode;
                 pNode = node->parent;
+
+                // 如果pNode不为红色，为了弥补缺失的黑点计数，需要向上递归
+                // 使所有父节点重新平衡
+                continue;
             } else if (bNode  && (bNode->left== NIL ||
                     ((RBNode *)bNode->left)->color == BLACK_COLOR)) {
             // case 3: bNode->color 是黑色，左子节点是黑色
@@ -445,21 +492,24 @@ RBTree::removeFixup(RBNode *&node, RBNode *&pNode) {
                 leftRotate(bNode);
 
                 // 重置标志
-                //bNode = (RBNode *)pNode->left;
-            } else if (bNode){
+                bNode = (RBNode *)pNode->left;
+            }
+
+            if (bNode  && (bNode->right== NIL ||
+                    ((RBNode *)bNode->right)->color == BLACK_COLOR)) {
             // case 4: bNode->color 是黑色，右子结点是黑色
-                ((RBNode *)pNode)->color = BLACK_COLOR;
-                bNode->color = RED_COLOR;
+                tmpColor     = pNode->color;
+                pNode->color = bNode->color;
+                bNode->color = tmpColor;
 
                 if (bNode->left)
                     ((RBNode *)bNode->left)->color = BLACK_COLOR;
 
                 rightRotate(pNode);
-                node = bNode;
-                return;
                 //pNode = node->parent;
                 //pNode = bNode;
                 //node = (RBNode *)bNode->right;
+                return;
             }
         }
     }

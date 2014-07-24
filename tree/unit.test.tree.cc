@@ -349,30 +349,38 @@ namespace {
     TEST_F(BinarySearchTreeTest, RBTreeRemoveTest) {
         //printPretty(t3_->root, 4, 0, cout);
 
-        printPretty(t3_->root, 4, 0, cout);
+        //printPretty(t3_->root, 4, 0, cout);
         t3_->remove(30);
-        printPretty(t3_->root, 4, 0, cout);
+        //cout << "After remove 30" << endl;
+        //printPretty(t3_->root, 4, 0, cout);
         t3_->remove(20);
-        printPretty(t3_->root, 4, 0, cout);
-/*        t3_->remove(40);*/
+        //cout << "After remove 20" << endl;
         //printPretty(t3_->root, 4, 0, cout);
-        //t3_->remove(10);
+        t3_->remove(40);
+        //cout << "After remove 40" << endl;
         //printPretty(t3_->root, 4, 0, cout);
-        //t3_->remove(25);
+        t3_->remove(10);
+        //cout << "After remove 10" << endl;
         //printPretty(t3_->root, 4, 0, cout);
-        //t3_->remove(35);
+        t3_->remove(25);
+        //cout << "After remove 25" << endl;
         //printPretty(t3_->root, 4, 0, cout);
-        //t3_->remove(50);
+        t3_->remove(35);
+        //cout << "After remove 35" << endl;
         //printPretty(t3_->root, 4, 0, cout);
-        //t3_->remove(5);
+        t3_->remove(50);
+        //cout << "After remove 50" << endl;
         //printPretty(t3_->root, 4, 0, cout);
-        //t3_->remove(15);
+        t3_->remove(5);
+        //cout << "After remove 5" << endl;
         //printPretty(t3_->root, 4, 0, cout);
-        //t3_->remove(28);
+        t3_->remove(15);
+        //cout << "After remove 15" << endl;
         //printPretty(t3_->root, 4, 0, cout);
-        //t3_->remove(41);
-        /*printPretty(t3_->root, 4, 0, cout);*/
-/*
+        t3_->remove(28);
+        //cout << "After remove 28" << endl;
+        //printPretty(t3_->root, 4, 0, cout);
+
         vector<RBNode *> vecrb;
         t3_->preOrder(vecrb);
         vector<RBNode *>::iterator iter = vecrb.begin();
@@ -434,7 +442,7 @@ namespace {
             ASSERT_TRUE(lbn == rbn);
 
             ++iter;
-        } */
+        }
     }
 ////////////////////////////////////////////////////////////////////////////////
 
