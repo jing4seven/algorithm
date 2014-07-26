@@ -3,42 +3,44 @@
  * 基于基数，按照基数的位从小到达进行计数排序
  */
 #include <iostream>
-#include <vector>
-#include <math.h>
 #include "sort.h"
-
 
 using namespace std;
 
 int rsort(vector<int> &source, int maxBit, int base ) {
-    int tmp, idx, i, k;
+    int idx, i, k, cidx, bitBase;
     idx = 0; // 基数位索引
     i = 0; // 元素索引
+    cidx = 0; // counts的索引值
+    bitBase = 1; // 为了获取每位上得值而使用的位基数
+
     vector<int> counts(base, 0);
+    vector<int> tmpArr(source.size(), 0);
 
     // 从最小的位开始
     idx = 1;
     while (idx <= maxBit) {
+        counts.assign(source.size(), 0);
+        bitBase = (int)pow(base, idx-1);
+
         // 根据当前基数进制位的大小，将元素进行分组
         for (i=0; i<source.size(); ++i)  {
-            if (idx> 1)
-                tmp=(int)(source[i]/pow(base, idx-1));
-            else
-                tmp=source[i];
+            cidx = (source[i]/bitBase)%base;
 
-            k = tmp%base;
-
-            counts[k] = counts[k]+1;
+            counts[cidx] = counts[cidx]+1;
         }
 
         for (i=1; i<base; ++i) {
             counts[i] = counts[i] + counts[i-1];
         }
 
-        for (int i=0; i<source.size(); ++i) {
-            source[counts[source[i]]-1] = source[i];
-            --counts[source[i]];
+        for (i=source.size()-1;i>=0;--i) {
+            cidx = (int)(source[i]/bitBase)%base;
+            tmpArr[counts[cidx]-1] = source[i];
+            counts[cidx]=counts[cidx]-1;
         }
+
+        source.assign(tmpArr.begin(), tmpArr.end());
 
         ++idx;
     }
@@ -51,7 +53,7 @@ int main() {
     int tmp = 0;
 
     srand((int)time(0));
-    while (i < 100) {
+    while (i < 10) {
         tmp = random_btn(50, 1000);
         source.push_back(tmp);
         ++i;
@@ -75,7 +77,7 @@ int main() {
     printsource(testsource);
 
     // 测试
-    assert(source == testsource);
+    //assert(source == testsource);
 
     cout << "\n";
 

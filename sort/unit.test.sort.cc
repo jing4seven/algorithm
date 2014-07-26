@@ -11,9 +11,9 @@
 using namespace std;
 
 namespace {
-/*    template <typename T>
-    void printsource(vector<T> &source) {
-        vector<T>::iterator itr = source.begin();
+    template <typename T>
+    void printsource(const vector<T> &source) {
+        typename vector<T>::const_iterator itr = source.begin();
         while (itr != source.end()) {
             cout << *itr << "\t";
             ++itr;
@@ -30,7 +30,7 @@ namespace {
         }
 
         cout << "\n";
-    }*/
+    }
     class SortTest: public ::testing::Test {
     protected:
         virtual void SetUp() {
@@ -61,48 +61,48 @@ namespace {
     TEST_F(SortTest, InsertSortTest) {
         ASSERT_EQ(SUCCESS, isort(source));
         ASSERT_EQ(testSource, source);
-        //printsource(source);
-        //printsource(testSource);
+        //printsource<int>(source);
+        //printsource<int>(testSource);
     }
 
     // mergeSort
     TEST_F(SortTest, MergeSortTest) {
         ASSERT_EQ(SUCCESS, msort(source, 0, source.size()-1));
         ASSERT_EQ(testSource, source);
-        //printsource(source);
-        //printsource(testSource);
+        //printsource<int>(source);
+        //printsource<int>(testSource);
     }
 
     // quickSort1
     TEST_F(SortTest, QuickSort1Test) {
         ASSERT_EQ(SUCCESS, qsort1(source, 0, source.size() -1 ));
         ASSERT_EQ(testSource, source);
-        //printsource(source);
-        //printsource(testSource);
+        //printsource<int>(source);
+        //printsource<int>(testSource);
     }
 
     // quickSort2
     TEST_F(SortTest, QuickSort2Test) {
         ASSERT_EQ(SUCCESS, qsort2(source, 0, source.size()-1));
         ASSERT_EQ(testSource, source);
-        //printsource(source);
-        //printsource(testSource);
+        //printsource<int>(source);
+        //printsource<int>(testSource);
     }
 
     // heapsort
     TEST_F(SortTest, HeapSortTest) {
         ASSERT_EQ(SUCCESS, heapsort(source));
         ASSERT_EQ(testSource, source);
-        //printsource(source);
-        //printsource(testSource);
+        //printsource<int>(source);
+        //printsource<int>(testSource);
     }
 
     // shellsort
     TEST_F(SortTest, ShellSortTest) {
         ASSERT_EQ(SUCCESS, shellsort(source));
         ASSERT_EQ(testSource, source);
-        //printsource(source);
-        //printsource(testSource);
+        //printsource<int>(source);
+        //printsource<int>(testSource);
     }
 
     // countsort
@@ -128,18 +128,21 @@ namespace {
         ASSERT_EQ(SUCCESS, countsort(source, maxvalue));
         ASSERT_EQ(testSource, source);
 
-        //printsource(source);
-        //printsource(testSource);
+        //printsource<int>(source);
+        //printsource<int>(testSource);
     }
 
     // radixsort
     TEST_F(SortTest, RadixSortTest) {
-        /*vector<int> source, testSource;
+        vector<int> source, testSource;
         int i(0), tmp(0), result(-1);
+
+        source.clear();
+        testSource.clear();
 
         srand((int)time(0));
         while (i < MAX_COUNT) {
-            tmp = random_btn(50, 1000);
+            tmp = random_btn(100, 1000);
             source.push_back(tmp);
             ++i;
         }
@@ -152,10 +155,10 @@ namespace {
         result = rsort(source, 3, 10);
 
         ASSERT_EQ(SUCCESS, result);
-        ASSERT_EQ(testSource, source);*/
+        ASSERT_EQ(testSource, source);
 
-        //printsource(source);
-        //printsource(testSource);
+        //printsource<int>(source);
+        //printsource<int>(testSource);
     }
 
     // bucksort
@@ -180,8 +183,8 @@ namespace {
         ASSERT_EQ(SUCCESS, bsort(source2, 10));
         ASSERT_EQ(testSource2, source2);
 
-        //printsource((vector<double> &)source2);
-        //printsource((vector<double> &)testSource2);
+        //printsource<double>(source2);
+        //printsource<double>(testSource2);
 
     }
 }

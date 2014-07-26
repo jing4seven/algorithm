@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <math.h>
 
 #define random(x)   (rand()%(x))
 
