@@ -22,15 +22,6 @@ namespace {
         cout << "\n";
     }
 
-    void printsource2(const vector<double> &source) {
-        vector<double>::const_iterator itr = source.begin();
-        while (itr != source.end()) {
-            cout << *itr << "\t";
-            ++itr;
-        }
-
-        cout << "\n";
-    }
     class SortTest: public ::testing::Test {
     protected:
         virtual void SetUp() {
