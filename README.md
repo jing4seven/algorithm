@@ -62,11 +62,13 @@
         * [C++](https://github.com/jing4seven/algorithm/blob/master/tree/rb.tree.cc)
     * B树
     * [UNIT TEST](https://github.com/jing4seven/algorithm/blob/master/tree/unit.test.tree.cc)
-    * [小结](https://github.com/jing4seven/algorithm/blob/master/tree/summary.md)
+    * 小结
 4. 搜索
     * 二分搜索
+        * [C++](https://github.com/jing4seven/algorithm/blob/master/search/binary.search.cc)
     * 广度优先搜索
     * 深度优先搜索
+    * [UNIT TEST](https://github.com/jing4seven/algorithm/blob/master/search/unit.test.search.cc)
     * 小结
 5. 分析方法
     * 动态规划

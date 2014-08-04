@@ -1,0 +1,8 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int BinarySearch(const vector<int> & s, const int k);
+
+////////////////////////////////////////////////////////////////////////////////
