@@ -72,11 +72,7 @@
         * [C++](https://github.com/jing4seven/algorithm/blob/master/search/dfs.cc)
     * [UNIT TEST](https://github.com/jing4seven/algorithm/blob/master/search/unit.test.search.cc)
     * 小结
-5. 分析方法
-    * 动态规划
-    * 贪心法
-    * 小结
-6. 图算法
+5. 图算法
     * 图接口的定义
         * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/graph.definition.md)
     * 最小生成树
@@ -89,6 +85,10 @@
         * Dijkstra 算法
     * 所有节点的最短路径问题
     * 最大流（Ford-Fulkerson算法）
+    * 小结
+6. 分析方法
+    * 动态规划
+    * 贪心法
     * 小结
 7. 特殊算法
     * NP完全问题
