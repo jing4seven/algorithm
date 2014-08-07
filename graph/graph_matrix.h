@@ -56,6 +56,7 @@ public:
     vector<GNode<T>* > vertexs;
 
     Graph();
+    ~Graph();
 
     void insert_vertex(const GNode<T> * node);
     void insert_edge(const GNode<T> * snode, const GNode<T> * enode);
