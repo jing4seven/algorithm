@@ -38,9 +38,10 @@ public:
 
     Graph(): vcount(0), ecount(0), adjacents() {
     }
+    ~Graph();
 
-    void insert_vertex(GNode<T> * node);
-    void insert_edge(GNode<T> * snode, GNode<T> * enode);
+    void insert_vertex(const GNode<T> * node);
+    void insert_edge(const GNode<T> * snode, const GNode<T> * enode);
     void remove_vertex(GNode<T> * node);
     void remove_edge(GNode<T> * snode, GNode<T> * enode);
 private:

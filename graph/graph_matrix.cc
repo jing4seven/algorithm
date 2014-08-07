@@ -211,7 +211,8 @@ Graph<T>::check_if_vertex_exists(const GNode<T>* & node, int & idx) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
+// local test function
+/*
 int main(void) {
     Graph<string> * graph = new Graph<string>();
     GNode<string> * na = new GNode<string>("A");
@@ -277,4 +278,4 @@ int main(void) {
     cout << endl;
 
     return 0;
-}
+}*/

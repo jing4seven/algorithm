@@ -8,15 +8,26 @@
 ////////////////////////////////////////////////////////////////////////////////
 // public function
 template <typename T>
+Graph<T>::~Graph() {
+    // 删除所有节点，过程中会自动删除相关邻接表
+    typename list<GNode<T>*>::iterator iter =  adjacents.begin();
+
+    while (iter != adjacents.end() ) {
+        remove_vertex((*iter));
+        ++iter;
+    }
+}
+
+template <typename T>
 void
-Graph<T>::insert_vertex(GNode<T> * gnode) {
+Graph<T>::insert_vertex(const GNode<T> * gnode) {
     if (gnode == NULL) {
         return;
     }
 
     int adjcount = this->adjacents.size();
 
-    adjacents.push_back(gnode);
+    adjacents.push_back((GNode<T> *)gnode);
     //adjacents.sort(comp_with_gnode<T>);
     adjacents.unique(dist_with_gnode<T>);
 
@@ -27,7 +38,7 @@ Graph<T>::insert_vertex(GNode<T> * gnode) {
 
 template <typename T>
 void
-Graph<T>::insert_edge(GNode<T> * snode, GNode<T> * enode) {
+Graph<T>::insert_edge(const GNode<T> * snode, const GNode<T> * enode) {
     if (snode == NULL || enode == NULL) {
         return;
     }
@@ -116,6 +127,9 @@ Graph<T>::remove_vertex(GNode<T> * gnode) {
 
     adjacents.erase(niter);
 
+    // 删除真实节点
+    delete tempNode;
+
     this->vcount--;
 }
 
@@ -131,23 +145,6 @@ Graph<T>::remove_edge(GNode<T> * snode, GNode<T> * enode) {
 
 ////////////////////////////////////////////////////////////////////////////////
 // private function
-
-/*
-template <typename T>
-GNode<T> *
-Graph<T>::get_vertex(const T data) const {
-    typename list<GNode<T>*>::const_iterator iter = adjacents.begin();
-    GNode<T> * gnode = NULL;
-    while (iter != adjacents.end() ) {
-        gnode = (GNode<T> *)*iter;
-        if (gnode && gnode->data == data) {
-            return gnode;
-        }
-        ++iter;
-    }
-    return NULL;
-}*/
-
 template <typename T>
 void
 Graph<T>::remove_adjacent(set<GNode<T>*> &adjacent, GNode<T> * gnode) {
@@ -251,4 +248,3 @@ int main(void) {
     cout << "--------------------" << endl;
     return 0;
 }*/
-
