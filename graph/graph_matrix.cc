@@ -1,8 +1,6 @@
-#include <stdio.h>
 #include <iostream>
-#include <exception>
-#include <new>
 #include "graph_matrix.h"
+#include <iomanip> // for setw
 
 ////////////////////////////////////////////////////////////////////////////////
 template <typename T>
@@ -12,6 +10,8 @@ Graph<T>::Graph():vcount(0), ecount(0) {
 
     for (int i =0; i<BASIC_CAPACITY; ++i) {
         matrixs[i] = new int[BASIC_CAPACITY];
+        // 将矩阵的值都填充为 INFINITE
+        fill_n(matrixs[i], BASIC_CAPACITY, INFINITE);
     }
 
     matrixs_capacity= BASIC_CAPACITY;
@@ -63,7 +63,7 @@ Graph<T>::insert_vertex(const GNode<T> * node) {
 
 template <typename T>
 void
-Graph<T>::insert_edge(const GNode<T> * snode, const  GNode<T> * enode) {
+Graph<T>::insert_edge(const GNode<T> * snode, const  GNode<T> * enode, int priority=1) {
     // 检查两个节点是否已经在图上
     int sidx(-1), eidx(-1);
     if (check_if_vertex_exists(snode, sidx) == false ||
@@ -73,7 +73,7 @@ Graph<T>::insert_edge(const GNode<T> * snode, const  GNode<T> * enode) {
 
     // 将值存放到矩阵中
     if (sidx >=0 && eidx >=0 && matrixs[sidx][eidx] != 1) {
-        matrixs[sidx][eidx] = 1;
+        matrixs[sidx][eidx] = priority;
         // 更新边计数器
         ecount++;
     }
@@ -90,15 +90,15 @@ Graph<T>::remove_vertex(GNode<T> * node) {
 
     // 删除节点涉及的所有边，并更新图的边数量；
     for (int i=0; i<vcount; ++i) {
-        if (matrixs[idx][i] > 0) {
-            matrixs[idx][i] = 0;
+        if (matrixs[idx][i] != INFINITE) {
+            matrixs[idx][i] = INFINITE;
             --ecount;
         }
     }
 
     for (int i=0; i<vcount; ++i) {
-        if (matrixs[i][idx] > 0) {
-            matrixs[i][idx] = 0;
+        if (matrixs[i][idx] != INFINITE) {
+            matrixs[i][idx] = INFINITE;
             --ecount;
         }
     }
@@ -140,7 +140,7 @@ Graph<T>::remove_edge(GNode<T> * snode, GNode<T> * enode) {
 
     // 在矩阵上删除边, 并更新边数量
     if (matrixs[sidx][eidx]) {
-        matrixs[sidx][eidx] = 0;
+        matrixs[sidx][eidx] = INFINITE;
         --ecount;
     }
 }
@@ -170,6 +170,7 @@ Graph<T>::allocate_matrixs() {
     try {
         for (int i=0; i< tmp_capacity; ++i) {
             matrixs[i] = new int[tmp_capacity];
+            fill_n(matrixs[i], tmp_capacity, INFINITE);
         }
     } catch (bad_alloc) {
         cout << "bad_alloc exception was raised." << endl;
@@ -229,26 +230,24 @@ int main(void) {
     graph->insert_vertex(ne);
     graph->insert_vertex(nf);
 
-    graph->insert_edge(na, nb);
-    graph->insert_edge(na, ne);
-    graph->insert_edge(ne, nd);
-    graph->insert_edge(nf, nb);
+    graph->insert_edge(na, nb, 5);
+    graph->insert_edge(na, ne, 4);
+    graph->insert_edge(ne, nd, 3);
+    graph->insert_edge(nf, nb, 2);
 
-
-    //cout << graph->vertexs.size() << endl;
     cout << "graph->vcount:" << graph->vcount << endl;
     cout << "graph->ecount:" << graph->ecount << endl;
 
     cout << "vertexs:" << endl;;
     for (int i=0; i<(graph->vertexs).size(); ++i) {
-        cout << graph->vertexs[i]->data << '\t';
+        cout << setw(15) << graph->vertexs[i]->data;
     }
     cout << endl;
 
     cout << "matrixs:" << endl;
     for (int i=0; i<graph->vcount; ++i) {
         for (int j=0; j<graph->vcount; ++j) {
-            cout << graph->matrixs[i][j] << '\t';
+            cout << setw(15) << graph->matrixs[i][j];
         }
         cout << endl;
     }
@@ -264,14 +263,14 @@ int main(void) {
 
     cout << "vertexs:" << endl;
     for (int i=0; i<graph->vertexs.size(); ++i) {
-        cout << graph->vertexs[i]->data << '\t';
+        cout << setw(15) << graph->vertexs[i]->data;
     }
     cout << endl;
 
     cout << "matrixs:" << endl;
     for (int i=0; i<graph->vcount; ++i) {
         for (int j=0; j<graph->vcount; ++j) {
-            cout << graph->matrixs[i][j] << '\t';
+            cout << setw(15) << graph->matrixs[i][j];
         }
         cout << endl;
     }

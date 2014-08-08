@@ -75,14 +75,18 @@
 5. 图算法
     * 图接口的定义
         * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/graph.definition.md)
+        * [C++ header 邻接表实现](https://github.com/jing4seven/algorithm/blob/master/graph/graph.h)
+        * [C++ header 邻接矩阵实现](https://github.com/jing4seven/algorithm/blob/master/graph/graph_matrix.h)
     * 最小生成树
-        * Dijkstra 算法
-            * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/dijkstra.mst.cc)
-        * Prim 算法
         * Kruskal 算法
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/kruskal.mst.cc)
+        * Prim 算法
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/prim.mst.cc)
     * 单源最短路径
         * Bellman-Ford 算法
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/bellman.ford.sssp.cc)
         * Dijkstra 算法
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/dijkstra.sssp.cc)
     * 所有节点的最短路径问题
     * 最大流（Ford-Fulkerson算法）
     * 小结
