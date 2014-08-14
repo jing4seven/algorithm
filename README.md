@@ -7,23 +7,25 @@
 ## 大纲
 
 1. 排序
-    * 插入排序
-        * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/insertsort.cc)
-    * 归并排序
-        * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/mergesort.cc)
-    * 快速排序
-        * [C++, 随机选取中间值](https://github.com/jing4seven/algorithm/blob/master/sort/quicksort.cc)
-        * [C++, 选取固定中间值](https://github.com/jing4seven/algorithm/blob/master/sort/quicksort2.cc)
-    * 堆排序
-        * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/heapsort.cc)
-    * 希尔排序
-        * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/shellsort.cc)
-    * 计数排序
-        * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/countsort.cc)
-    * 基数排序
-        * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/radixsort.cc)
-    * 桶排序
-        * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/bucksort.cc)
+    * 基于比较的排序（非线性时间）
+        * 插入排序
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/insertsort.cc)
+        * 归并排序
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/mergesort.cc)
+        * 快速排序
+            * [C++, 随机选取中间值](https://github.com/jing4seven/algorithm/blob/master/sort/quicksort.cc)
+            * [C++, 选取固定中间值](https://github.com/jing4seven/algorithm/blob/master/sort/quicksort2.cc)
+        * 堆排序
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/heapsort.cc)
+        * 希尔排序
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/shellsort.cc)
+    * 线性时间排序
+        * 计数排序
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/countsort.cc)
+        * 基数排序
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/radixsort.cc)
+        * 桶排序
+            * [C++](https://github.com/jing4seven/algorithm/blob/master/sort/bucksort.cc)
     * [UNIT TEST](https://github.com/jing4seven/algorithm/blob/master/sort/unit.test.sort.cc)
     * [小结](https://github.com/jing4seven/algorithm/blob/master/sort/summary.md)
 2. 散列
@@ -66,9 +68,9 @@
 4. 搜索
     * 二分搜索
         * [C++](https://github.com/jing4seven/algorithm/blob/master/search/binary.search.cc)
-    * 广度优先搜索
+    * DFS（广度优先搜索）
         * [C++](https://github.com/jing4seven/algorithm/blob/master/search/bfs.cc)
-    * 深度优先搜索
+    * BFS（深度优先搜索）
         * [C++](https://github.com/jing4seven/algorithm/blob/master/search/dfs.cc)
     * [UNIT TEST](https://github.com/jing4seven/algorithm/blob/master/search/unit.test.search.cc)
     * 小结
@@ -79,24 +81,38 @@
         * [C++ header 邻接矩阵实现](https://github.com/jing4seven/algorithm/blob/master/graph/graph_matrix.h)
     * 最小生成树
         * Kruskal 算法
-            * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/kruskal.mst.cc)
+            * [C++ 基于邻接矩阵实现](https://github.com/jing4seven/algorithm/blob/master/graph/kruskal.mst.cc)
         * Prim 算法
-            * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/prim.mst.cc)
+            * [C++ 基于邻接矩阵实现](https://github.com/jing4seven/algorithm/blob/master/graph/prim.mst.cc)
     * 单源最短路径
         * Bellman-Ford 算法
-            * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/bellman.ford.sssp.cc)
         * Dijkstra 算法
-            * [C++](https://github.com/jing4seven/algorithm/blob/master/graph/dijkstra.sssp.cc)
-    * 所有节点的最短路径问题
-    * 最大流（Ford-Fulkerson算法）
+    * 所有节点对的最短路径问题
+        * Floyd-Warshall算法
+    * 最大流
+        * Ford-Fulkerson算法
     * 小结
 6. 分析方法
     * 动态规划
     * 贪心法
     * 小结
-7. 特殊算法
-    * NP完全问题
+7. 算法应用
+    * 多线程算法
+    * 矩阵运算
+    * 线性规划
+    * 数论算法
+    * 字符串匹配
+        * Rabin-Karp算法
+        * DFA（有限状态自动机）算法
+        * Knuth-Morris-Pratt算法
+    * 几何算法
+    * NP完全性
     * 近似算法
     * 小结
 8. 资源
     * [googletest](https://github.com/jing4seven/algorithm/blob/master/res/googletest.setup.md)
+
+## 参考
+1. [算法导论 （第三版）](http://www.amazon.cn/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA-Thomas-H-Cormen/dp/B00AK7BYJY/ref=sr_1_1?ie=UTF8&qid=1410230607&sr=8-1&keywords=%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA) 
+2. [算法精解](http://www.amazon.cn/%E7%AE%97%E6%B3%95%E7%B2%BE%E8%A7%A3-C%E8%AF%AD%E8%A8%80%E6%8F%8F%E8%BF%B0-Kyle-Loudon/dp/B00E87TVL0/ref=sr_1_5?ie=UTF8&qid=1410230731&sr=8-5&keywords=%E7%AE%97%E6%B3%95)
+3. [数据结构与算法分析：C++描述（第3版）](http://item.jd.com/10062313.html)
