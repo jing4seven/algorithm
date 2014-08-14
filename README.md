@@ -1,8 +1,8 @@
-# 算法复习
+# 算法知识梳理与实践
 
-创建这个Repository，是为了让最近复习的算法知识能够印象更加深刻。代码全部用C/C++实现， 至少一种实现方法。
+数据结构与算法是计算机软件工程的基石，好比武功秘籍九阳神功。夯实理论最好的办法就是实践，创建这个Repository，是希望创建一个循序渐进的实践环境，以便逐步掌握整个理论知识体系。
 
-每种算法/模型都有相应的`UNIT TEST`,都基于[googletest](https://code.google.com/p/googletest/)实现。
+算法基于c++实现，大部分都用到了STL，部分算法给出了相应的`UNIT TEST`,都基于[googletest](https://code.google.com/p/googletest/)实现。
 
 ## 大纲
 
