@@ -32,21 +32,22 @@
     * key为整数的散列
         * [除法散列(Division hashing)](https://github.com/jing4seven/algorithm/blob/master/hash/divi.hash.cc)
         * [乘法散列(Multiplication hashing)](https://github.com/jing4seven/algorithm/blob/master/hash/mult.hash.cc)
-        * [全域散列(Universal hashing)](https://github.com/jing4seven/algorithm/blob/master/hash/uni.hash.cc)
+        * [全域散列(Universal hashing 散列函数随机)](https://github.com/jing4seven/algorithm/blob/master/hash/uni.hash.cc)
     * key为字符串的散列
+        * [PJWHash](https://github.com/jing4seven/algorithm/blob/master/hash/str.hash.ins1.cc)
         * [BKDRHash]
         * [DJBHash]
         * [JSHash]
         * [RSHash]
         * [SDBMHash]
-        * [PJWHash](https://github.com/jing4seven/algorithm/blob/master/hash/str.hash.ins1.cc)
         * [ELFHash]
     * 解决冲突的方法
-        * [分离链接法](https://github.com/jing4seven/algorithm/blob/master/hash/linked.list.hashtable.cc)
-        * 不使用链表的方法
-            * [开放寻址发(Open addressing)]
+        * 分离链接法(Chaining 基于链表的方法)
+        * 开放寻址(Open addressing 不基于链表的方法)
+            * [线性探测]
             * [二次探测(Quadratic probing)]
             * [双重探测(Secondary clustering)]
+        * 完全散列(Perfect Hashing 基于链表的方法)
     * [小结](https://github.com/jing4seven/algorithm/blob/master/hash/summary.md)
 3. 树数据结构
     * 树接口的定义
