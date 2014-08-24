@@ -76,6 +76,8 @@
     * 摊还分析
     * 小结
 6. 图算法
+    * 图接口的定义
+        * [C++] (https://github.com/jing4seven/algorithm/blob/master/graph.definition.md)
     * 最小生成树（Prim和Kruskal算法）
     * 单源最短路径（Bellman-Ford和Dijkstra算法）
     * 所有节点的最短路径问题
