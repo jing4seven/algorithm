@@ -9,6 +9,7 @@
 
 #include <list>
 #include <set>
+#include <string>
 
 using namespace std;
 
@@ -38,14 +39,31 @@ public:
     Graph(): vcount(0), ecount(0), adjacents() {
     }
     Graph(const list<GNode<T> > adj);
+    /*
     void insert_vertex(const T data);
     void insert_edge(const T s, const T e);
     void remove_vertex(const T data);
     void remove_edge(const T s, const T e);
-    set<GNode<T>*> get_adjacent(const T s) const;
+    set<GNode<T>*> get_adjacent(const T s) const;*/
+    void insert_vertex(GNode<T> * node);
+    void insert_edge(GNode<T> * snode, GNode<T> * enode);
+    void remove_vertex(GNode<T> * node);
+    void remove_edge(GNode<T> * snode, GNode<T> * enode);
 private:
-    GNode<T> * get_vertex(const T data) const;
-    void remove_adjacent(set<GNode<T>*> & adjacent, const T adjdata);
+    void remove_adjacent(set<GNode<T>*> &adjacent, GNode<T> * n);
+
 };
 
-#endif
+template <typename T>
+bool
+dist_with_gnode(GNode<T> * ln, GNode<T> * rn) {
+    return ln->data == rn->data;
+}
+
+template <typename T>
+bool
+comp_with_gnode(GNode<T> * ln, GNode<T> * rn) {
+    return ln->data < rn->data;
+}
+
+#endif //ALG_GRAPH_H

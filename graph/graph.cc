@@ -1,37 +1,23 @@
 #include "graph.h"
 #include <iostream>
 #include <stdio.h>
-#include <list>
-#include <string>
-#include <set>
-
 /*
  * 所有的顶点是按照从小到大得顺序进行排列, 找到合适的位置，将带插入节点插入即可.
  */
-
-template <typename T>
-bool
-dist_with_gnode(GNode<T> * ln, GNode<T> * rn) {
-    return ln->data == rn->data;
-}
-
-
-template <typename T>
-bool
-comp_with_gnode(GNode<T> * ln, GNode<T> * rn) {
-    return ln->data < rn->data;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // public function
 template <typename T>
 void
-Graph<T>::insert_vertex(const T data) {
+Graph<T>::insert_vertex(GNode<T> * gnode) {
+    if (gnode == NULL) {
+        return;
+    }
+
     int adjcount = this->adjacents.size();
 
-    GNode<T> * gnode = new GNode<T>(data);
     adjacents.push_back(gnode);
-    adjacents.sort(comp_with_gnode<T>);
+    //adjacents.sort(comp_with_gnode<T>);
     adjacents.unique(dist_with_gnode<T>);
 
     if (adjcount < adjacents.size()) {
@@ -41,7 +27,11 @@ Graph<T>::insert_vertex(const T data) {
 
 template <typename T>
 void
-Graph<T>::insert_edge(const T s, const T e) {
+Graph<T>::insert_edge(GNode<T> * snode, GNode<T> * enode) {
+    if (snode == NULL || enode == NULL) {
+        return;
+    }
+
     typename list<GNode<T> *>::iterator siter, eiter;
     GNode<T> * sgnode,  * egnode;
 
@@ -50,7 +40,7 @@ Graph<T>::insert_edge(const T s, const T e) {
     while (siter != adjacents.end()) {
         sgnode = (GNode<T> *)*siter;
 
-        if (sgnode->data == s) {
+        if (sgnode->data == snode->data) {
             break;
         }
         ++siter;
@@ -64,7 +54,7 @@ Graph<T>::insert_edge(const T s, const T e) {
     while (eiter != adjacents.end()) {
         egnode = (GNode<T> *)*eiter;
 
-        if (egnode->data == e) {
+        if (egnode->data == enode->data) {
             break;
         }
         ++eiter;
@@ -84,20 +74,26 @@ Graph<T>::insert_edge(const T s, const T e) {
 
 template <typename T>
 void
-Graph<T>::remove_vertex(const T data) {
-    GNode<T> * gnode, * adjnode;
-    gnode = adjnode = NULL;
+Graph<T>::remove_vertex(GNode<T> * gnode) {
+    GNode<T> * tempNode, * adjnode;
+    adjnode = NULL;
 
+    if (gnode == NULL) {
+        return;
+    }
+
+    // 查找gnode是否在图中
     typename list<GNode<T>*>::iterator niter = adjacents.begin();
     while (niter != adjacents.end() ) {
-        gnode = (GNode<T> *)*niter;
-        if (gnode && gnode->data == data) {
+        tempNode= (GNode<T> *)*niter;
+        if (tempNode &&  tempNode->data == gnode->data) {
             break;
         }
         ++niter;
     }
+
     // 抹去当前节点的数据
-    if (gnode == NULL || *niter == NULL) {
+    if (tempNode== NULL) {
         return;
     }
 
@@ -106,15 +102,14 @@ Graph<T>::remove_vertex(const T data) {
 
     // 遍历邻接表，将所有包含data节点的边都删除
     while (iter != adjacents.end()) {
-        //adjnode = (GNode<T> *)*iter;
 
         if (*iter != NULL) {
-            remove_adjacent((*iter)->adjacent, data);
+            remove_adjacent((*iter)->adjacent, gnode);
         }
         ++iter;
     }
 
-    set<GNode<T>*> gadjacent = gnode->adjacent;
+    set<GNode<T>*> gadjacent = tempNode->adjacent;
     // 清空邻接表之前记得要同步边的数量
     this->ecount = this->ecount - gadjacent.size();
     gadjacent.clear();
@@ -126,31 +121,18 @@ Graph<T>::remove_vertex(const T data) {
 
 template <typename T>
 void
-Graph<T>::remove_edge(const T s, const T e) {
-    GNode<T> * gnode = get_vertex(s);
-
-    if (gnode == NULL) {
+Graph<T>::remove_edge(GNode<T> * snode, GNode<T> * enode) {
+    if (snode == NULL) {
         return;
     }
 
-    remove_adjacent(gnode->adjacent, e);
+    remove_adjacent(snode->adjacent, enode);
 }
 
-template <typename T>
-set<GNode<T>*>
-Graph<T>::get_adjacent(const T data) const {
-    GNode<T> * gnode = NULL;
-
-    if ((gnode = get_vertex(data)) != NULL) {
-        return gnode->adjacent;
-    }
-
-    return NULL;
-}
 ////////////////////////////////////////////////////////////////////////////////
 // private function
 
-
+/*
 template <typename T>
 GNode<T> *
 Graph<T>::get_vertex(const T data) const {
@@ -164,18 +146,18 @@ Graph<T>::get_vertex(const T data) const {
         ++iter;
     }
     return NULL;
-}
+}*/
 
 template <typename T>
 void
-Graph<T>::remove_adjacent(set<GNode<T>*> &adjacent, const T adjdata) {
-    if (adjacent.size() <=0) {
+Graph<T>::remove_adjacent(set<GNode<T>*> &adjacent, GNode<T> * gnode) {
+    if (adjacent.size() <=0 || gnode == NULL) {
         return;
     }
 
     typename set<GNode<T>*>::iterator iter = adjacent.begin();
     while (iter!=adjacent.end()) {
-        if ((*iter)->data == adjdata) {
+        if ((*iter)->data == gnode->data) {
             break;
         }
         ++iter;
@@ -189,37 +171,43 @@ Graph<T>::remove_adjacent(set<GNode<T>*> &adjacent, const T adjdata) {
 
 ////////////////////////////////////////////////////////////////////////////////
 // local test function
+/*
 int main(void) {
     Graph<string> * graph = new Graph<string>();
 
-    graph->insert_vertex("D");
-    graph->insert_vertex("C");
-    graph->insert_vertex("A");
-    graph->insert_vertex("E");
-    graph->insert_vertex("B");
-    graph->insert_vertex("F");
-    graph->insert_vertex("G");
-    graph->insert_vertex("G");
+    GNode<string> * n1 = new GNode<string>("A");
+    GNode<string> * n2 = new GNode<string>("B");
+    GNode<string> * n3 = new GNode<string>("C");
+    GNode<string> * n4 = new GNode<string>("D");
+    GNode<string> * n5 = new GNode<string>("E");
+    GNode<string> * n6 = new GNode<string>("F");
+    GNode<string> * n7 = new GNode<string>("G");
 
-    graph->insert_edge("A", "B");
-    graph->insert_edge("A", "D");
-    graph->insert_edge("A", "C");
+    graph->insert_vertex(n1);
+    graph->insert_vertex(n2);
+    graph->insert_vertex(n3);
+    graph->insert_vertex(n4);
+    graph->insert_vertex(n5);
+    graph->insert_vertex(n6);
+    graph->insert_vertex(n7);
 
-    graph->insert_edge("B", "D");
-    graph->insert_edge("B", "E");
+    graph->insert_edge(n1, n2);
+    graph->insert_edge(n1, n4);
+    graph->insert_edge(n1, n3);
 
-    graph->insert_edge("C", "F");
+    graph->insert_edge(n2, n4);
+    graph->insert_edge(n2, n5);
 
-    graph->insert_edge("D", "F");
-    graph->insert_edge("D", "G");
-    graph->insert_edge("D", "C");
+    graph->insert_edge(n3, n6);
 
-    graph->insert_edge("E", "D");
-    graph->insert_edge("E", "G");
+    graph->insert_edge(n4, n6);
+    graph->insert_edge(n4, n7);
+    graph->insert_edge(n4, n3);
 
-    graph->insert_edge("G", "F");
+    graph->insert_edge(n5, n4);
+    graph->insert_edge(n5, n7);
 
-    //list<GNode<string>*> adjs = graph->adjacents;
+    graph->insert_edge(n7, n6);
 
     list<GNode<string>*>::iterator iter = graph->adjacents.begin();
     set<GNode<string>*>::iterator adjiter;
@@ -240,10 +228,10 @@ int main(void) {
 
     cout << "--------------------" << endl;
 
-    graph->remove_vertex("A");
-    graph->remove_vertex("C");
+    graph->remove_vertex(n1);
+    graph->remove_vertex(n3);
 
-    graph->remove_edge("E", "D");
+    graph->remove_edge(n5, n4);
 
     iter = graph->adjacents.begin();
 
@@ -262,5 +250,5 @@ int main(void) {
     cout << "ecount:" << graph->ecount << endl;
     cout << "--------------------" << endl;
     return 0;
-}
+}*/
 
