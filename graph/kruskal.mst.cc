@@ -67,21 +67,20 @@ kruskal_mst(Graph<T> * graph) {
     // 将所有的边按照权值从小到大排序
     // map默认就是按照Key从小到大排序的
 
-    // 循环按权值排序过的边，如果边的两个点都没有被记录过，
+    // 循环按权值排序过的边，如果边的两个点分别属于不同的树，
     // 就将权值累加到计数器，并把节点加入节点记录器
     // 判断是否集合中已经包含所有的节点，如果是，完毕， 不是就继续
     multimap<int, NodePosition*>::const_iterator miter = sortedEdgs.begin();
-    while (miter != sortedEdgs.end() &&
-            graph->vertexs.size() > check_pos_bit_count(bit_count)) {
+    while (miter != sortedEdgs.end() ) {
 
         int  x = (*miter).second->x;
         int  y = (*miter).second->y;
 
-        if ( (bit_count & (0x1<< x)) >> x == 0x0 || (bit_count & (0x1<< y)) >> y == 0x0) {
+        if  (!(bit_count & (0x1<< x)) || !(bit_count & (0x1<< y)) ) {
+            cout << "x,y:"<< x << "," << y<< endl;
             bit_count = bit_count | (0x1<< x);
             bit_count = bit_count | (0x1<< y);
             priorities+= miter->first;
-            //cout << x <<"," << y<< endl;
         }
 
         ++miter;
@@ -118,7 +117,7 @@ int main(void) {
     graph->insert_edge(ne, nf, 10);
     graph->insert_edge(nf, ng, 4);
     graph->insert_edge(nf, nd, 14);
-    graph->insert_edge(nf, nc, 4);
+    graph->insert_edge(nf, nc, 2);
     graph->insert_edge(nc, ni, 2);
     graph->insert_edge(ng, ni, 6);
     graph->insert_edge(ng, nh, 1);
@@ -131,7 +130,7 @@ int main(void) {
     graph->insert_edge(nd, nc, 7);
     graph->insert_edge(ne, nd, 9);
     graph->insert_edge(nf, ne, 10);
-    graph->insert_edge(ng, nf, 4);
+    graph->insert_edge(ng, nf, 2);
     graph->insert_edge(nd, nf, 14);
     graph->insert_edge(nc, nf, 4);
     graph->insert_edge(ni, nc, 2);

@@ -63,7 +63,8 @@ Graph<T>::insert_vertex(const GNode<T> * node) {
 
 template <typename T>
 void
-Graph<T>::insert_edge(const GNode<T> * snode, const  GNode<T> * enode, int priority=1) {
+Graph<T>::insert_edge(const GNode<T> * snode, const  GNode<T> * enode, int priority) {
+
     // 检查两个节点是否已经在图上
     int sidx(-1), eidx(-1);
     if (check_if_vertex_exists(snode, sidx) == false ||
@@ -72,7 +73,7 @@ Graph<T>::insert_edge(const GNode<T> * snode, const  GNode<T> * enode, int prior
     }
 
     // 将值存放到矩阵中
-    if (sidx >=0 && eidx >=0 && matrixs[sidx][eidx] != 1) {
+    if (sidx >=0 && eidx >=0 && matrixs[sidx][eidx] == INFINITE) {
         matrixs[sidx][eidx] = priority;
         // 更新边计数器
         ecount++;
@@ -119,7 +120,7 @@ Graph<T>::remove_vertex(GNode<T> * node) {
     // 删除节点
     typename vector<GNode<T> *>::iterator iter = vertexs.begin();
     iter+=idx;
-    cout << (*iter)->data << endl;
+    //cout << (*iter)->data << endl;
     delete (*iter);
     vertexs.erase(iter);
     --vcount;
@@ -154,21 +155,21 @@ Graph<T>::allocate_matrixs() {
     int tmp_matrixs[matrixs_capacity][matrixs_capacity];
 
     // 备份原始数据
-    for (int i=0; i< matrixs_capacity; ++i) {
-        for (int j=0; j<matrixs_capacity; ++j) {
+    for (size_t i=0; i< matrixs_capacity; ++i) {
+        for (size_t j=0; j<matrixs_capacity; ++j) {
             tmp_matrixs[i][j] = matrixs[i][j];
         }
     }
 
     // 删除旧的
-    for (int i=0; i<matrixs_capacity; ++i) {
-        delete [] matrixs[i];
+    for (size_t i=0; i<matrixs_capacity; ++i) {
+        //delete [] matrixs[i];
     }
-    delete [] matrixs;
+    //delete [] matrixs;
 
     // 创建新的
     try {
-        for (int i=0; i< tmp_capacity; ++i) {
+        for (size_t i=0; i< tmp_capacity; ++i) {
             matrixs[i] = new int[tmp_capacity];
             fill_n(matrixs[i], tmp_capacity, INFINITE);
         }
@@ -178,8 +179,8 @@ Graph<T>::allocate_matrixs() {
     }
 
     // 还原就数据
-    for (int i=0; i<matrixs_capacity; ++i) {
-        for (int j=0; j<matrixs_capacity; ++j) {
+    for (size_t i=0; i<matrixs_capacity; ++i) {
+        for (size_t j=0; j<matrixs_capacity; ++j) {
             matrixs[i][j] = tmp_matrixs[i][j];
         }
     }
@@ -239,14 +240,14 @@ int main(void) {
     cout << "graph->ecount:" << graph->ecount << endl;
 
     cout << "vertexs:" << endl;;
-    for (int i=0; i<(graph->vertexs).size(); ++i) {
+    for (size_t i=0; i<(graph->vertexs).size(); ++i) {
         cout << setw(15) << graph->vertexs[i]->data;
     }
     cout << endl;
 
     cout << "matrixs:" << endl;
-    for (int i=0; i<graph->vcount; ++i) {
-        for (int j=0; j<graph->vcount; ++j) {
+    for (size_t i=0; i<graph->vcount; ++i) {
+        for (size_t j=0; j<graph->vcount; ++j) {
             cout << setw(15) << graph->matrixs[i][j];
         }
         cout << endl;
@@ -262,14 +263,14 @@ int main(void) {
     cout << "graph->ecount:" << graph->ecount << endl;
 
     cout << "vertexs:" << endl;
-    for (int i=0; i<graph->vertexs.size(); ++i) {
+    for (size_t i=0; i<graph->vertexs.size(); ++i) {
         cout << setw(15) << graph->vertexs[i]->data;
     }
     cout << endl;
 
     cout << "matrixs:" << endl;
-    for (int i=0; i<graph->vcount; ++i) {
-        for (int j=0; j<graph->vcount; ++j) {
+    for (size_t i=0; i<graph->vcount; ++i) {
+        for (size_t j=0; j<graph->vcount; ++j) {
             cout << setw(15) << graph->matrixs[i][j];
         }
         cout << endl;
