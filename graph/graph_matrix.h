@@ -31,6 +31,7 @@ class GNode {
 public:
     T data;
     GNode(T d): data(d){};
+    GNode(GNode<T> * gn):data(gn->data) {};
 };
 
 ////////////////////////////////////////////////////////////////////////////////
