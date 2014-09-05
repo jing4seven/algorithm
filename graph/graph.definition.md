@@ -80,3 +80,9 @@ public:
     void remove_vertex(GNode<T> * node);
     void remove_edge(GNode<T> * snode, GNode<T> * enode);
 ```
+
+具体参见实现：
+1. [c++ header 邻接表实现](https://github.com/jing4seven/algorithm/blob/master/graph/graph.h)
+2. [c++ 邻接表实现](https://github.com/jing4seven/algorithm/blob/master/graph/graph.cc)
+3. [c++ header 邻接矩阵实现](https://github.com/jing4seven/algorithm/blob/master/graph/graph_matrix.h)
+4. [c++ 邻接矩阵实现](https://github.com/jing4seven/algorithm/blob/master/graph/graph_matrix.cc)
